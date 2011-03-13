@@ -17,7 +17,7 @@ use XHProfRuns_Default;
  *
  * @author Jonas Wouters <hello@jonaswouters.be>
  */
-class XhprofDataCollector extends DataCollector
+class XhprofCollector extends DataCollector
 {
     protected $container;
     protected $logger;
@@ -34,8 +34,8 @@ class XhprofDataCollector extends DataCollector
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
 
-        require_once $this->container->getParameter('jns.xhprof.location.lib');
-        require_once $this->container->getParameter('jns.xhprof.location.runs');
+        require_once $this->container->getParameter('jns_xhprof.location.lib');
+        require_once $this->container->getParameter('jns_xhprof.location.runs');
 
         $xhprof_data = xhprof_disable();
 
@@ -49,7 +49,7 @@ class XhprofDataCollector extends DataCollector
         
         $this->data = array(
             'xhprof' => $run_id,
-            'xhprof_url' => $this->container->getParameter('jns.xhprof.location.web'),
+            'xhprof_url' => $this->container->getParameter('jns_xhprof.location.web'),
         );
     }
 
