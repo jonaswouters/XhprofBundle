@@ -1,0 +1,4 @@
+parameters:
+    jns.xhprof.location.lib:  '/opt/local/www/php5-xhprof/xhprof_lib/utils/xhprof_lib.php'
+    jns.xhprof.location.runs:  '/opt/local/www/php5-xhprof/xhprof_lib/utils/xhprof_runs.php'
+    jns.xhprof.location.web:  'http://xhprof.localhost'
