@@ -1,12 +1,12 @@
 services:
     xhprof_listener:
-        class: Jns\Bundle\Debug\XHProfBundle\RequestListener
+        class: Jns\Bundle\XhprofBundle\RequestListener
         arguments: [@logger]
         tags:
             - { name: kernel.listener, priority: 0, event: core.request, method: handle}
 
     data_collector.xhprof:
-        class: Jns\Bundle\Debug\XHProfBundle\DataCollector\XHProfDataCollector
+        class: Jns\Bundle\XhprofBundle\DataCollector\XhprofDataCollector
         arguments: [@service_container, @logger]
         tags:
-            - { name: data_collector, template: "JnsXHProfBundle:Collector:xhprof", id: "xhprof"}
+            - { name: data_collector, template: "JnsXhprofBundle:Collector:xhprof", id: "xhprof"}

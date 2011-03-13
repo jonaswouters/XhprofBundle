@@ -1,9 +1,9 @@
 <?php
 
-namespace Jns\Bundle\Debug\XHProfBundle;
+namespace Jns\Bundle\XhprofBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class JnsXHProfBundle extends Bundle
+class JnsXhprofBundle extends Bundle
 {
 }

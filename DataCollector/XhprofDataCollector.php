@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Jns\Bundle\Debug\XHProfBundle\DataCollector;
+namespace Jns\Bundle\XhprofBundle\DataCollector;
 
 
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
@@ -13,11 +13,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use XHProfRuns_Default;
 
 /**
- * XHProfDataCollector.
+ * XhprofDataCollector.
  *
  * @author Jonas Wouters <hello@jonaswouters.be>
  */
-class XHProfDataCollector extends DataCollector
+class XhprofDataCollector extends DataCollector
 {
     protected $container;
     protected $logger;

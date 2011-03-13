@@ -1,6 +1,6 @@
 <?php
 
-namespace Jns\Bundle\Debug\XHProfBundle;
+namespace Jns\Bundle\XhprofBundle;
 
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;

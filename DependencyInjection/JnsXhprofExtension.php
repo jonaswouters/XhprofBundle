@@ -1,13 +1,13 @@
 <?php
 
-namespace Jns\Bundle\Debug\XHProfBundle\DependencyInjection;
+namespace Jns\Bundle\XhprofBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Config\FileLocator;
 
-class JnsXHProfExtension extends Extension
+class JnsXhprofExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -18,6 +18,6 @@ class JnsXHProfExtension extends Extension
 
     public function getAlias()
     {
-        return 'jns_xh_prof';
+        return 'jns_xhprof';
     }
 }
