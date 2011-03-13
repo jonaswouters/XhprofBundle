@@ -20,10 +20,15 @@ This bundle helps you to easily use the XHProf bundle with the web debug toolbar
 Configuration
 -------------
 
-Define the module in your app/AppKernel.php file
+    1. Define the module in your app/AppKernel.php file
 
-    $bundles[] = new Jns\Bundle\XhprofBundle\JnsXhprofBundle();
+        $bundles[] = new Jns\Bundle\XhprofBundle\JnsXhprofBundle();
 
-Add the Jns namespace to your app/autoload.php file
+    2. Add the Jns namespace to your app/autoload.php file
+
+
+    3. Configure the XHProf locations.
+
+        Work in progres...
 
 [1]: http://mirror.facebook.net/facebook/xhprof/doc.html
