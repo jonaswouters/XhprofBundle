@@ -17,18 +17,52 @@ What does this Symfony 2 Bundle do?
 This bundle helps you to easily use the XHProf bundle with the web debug toolbar in Symfony 2.
 
 
-Configuration
--------------
+## Installation
 
-  1. Define the module in your app/AppKernel.php file
+### Get the bundle
 
-        $bundles[] = new Jns\Bundle\XhprofBundle\JnsXhprofBundle();
+To install the bundle, place it in the `src/Jns/Bundle` directory of your project
+(so that it lives at `src/Jns/Bundle/XhprofBundle`). You can do this by adding
+the bundle as a submodule, cloning it, or simply downloading the source.
 
-  2. Add the Jns namespace to your app/autoload.php file
+    git submodule add https://github.com/jonaswouters/XhprofBundle.git src/Jns/Bundle/XhprofBundle
+
+### Add the Jns namespace to your autoloader
+
+If this is the first Jns bundle in your Symfony 2 project, you'll
+need to add the `Jns` namespace to your autoloader. This file is usually located at `app/autoload.php`.
+
+    $loader->registerNamespaces(array(
+        'Jns'                       => __DIR__.'/../src'
+        // ...
+    ));
+
+### Initializing the bundle
+
+To initialize the bundle, you'll need to add it in your kernel. This
+file is usually located at `app/AppKernel.php`. Loading it only in your dev environment is recommended.
+
+    public function registerBundles()
+    {
+        // ...
+
+        if (in_array($this->getEnvironment(), array('dev', 'test'))) {
+            // ...
+            $bundles[] = new Jns\Bundle\XhprofBundle\JnsXhprofBundle();
+        }
+    )
 
 
-  3. Configure the XHProf locations.
+### Configure the XHProf locations.
 
-        Work in progres...
+The Bundle comes preconfigured for the macports php5-xhprof default installation, 
+with the xhprof web located at http://xhprof.localhost.
+To change these settings for your environment you can override the defaults by
+defining the following settings in your config. The config is usually located at `app/config/config.yml`.
+
+    jns_xhprof:
+        location.lib: /opt/local/www/php5-xhprof/xhprof_lib/utils/xhprof_lib.php
+        location.runs: /opt/local/www/php5-xhprof/xhprof_lib/utils/xhprof_runs.php
+        location.web: http://xhprof.localhost
 
 [1]: http://mirror.facebook.net/facebook/xhprof/doc.html
