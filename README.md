@@ -70,4 +70,5 @@ defining the following settings in your config. The config is usually located at
         location.web: http://xhprof.localhost
 
 [1]: http://mirror.facebook.net/facebook/xhprof/doc.html
-[1]: http://www.macports.org/
+[2]: http://www.macports.org/
+
