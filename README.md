@@ -19,6 +19,10 @@ This bundle helps you to easily use the XHProf bundle with the web debug toolbar
 
 ## Installation
 
+Make sure you have XHProf installed. 
+If you are on a mac you can easily install it via [Macports][2]
+    sudo port install php5-xhprof
+
 ### Get the bundle
 
 To install the bundle, place it in the `src/Jns/Bundle` directory of your project
@@ -66,3 +70,4 @@ defining the following settings in your config. The config is usually located at
         location.web: http://xhprof.localhost
 
 [1]: http://mirror.facebook.net/facebook/xhprof/doc.html
+[1]: http://www.macports.org/
