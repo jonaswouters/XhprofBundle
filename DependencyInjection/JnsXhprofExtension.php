@@ -30,12 +30,13 @@ class JnsXhprofExtension extends Extension
         $configuration = new Configuration();
         $config = $processor->process($configuration->getConfigTree(), $configs);
 
-        $this->loadDefaults($container);
-        
-        foreach ($config as $key => $value) {
-            $container->setParameter($this->getAlias().'.'.$key, $value);
+        if ($config['enabled']) {
+            $this->loadDefaults($container);
+            
+            foreach ($config as $key => $value) {
+                $container->setParameter($this->getAlias().'.'.$key, $value);
+            }
         }
-        
     }
 
     public function getAlias()
