@@ -10,6 +10,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
  * RequestListener.
@@ -27,7 +28,7 @@ class RequestListener
         $this->logger = $logger;
     }
 
-    public function handle(EventInterface $event)
+    public function onCoreRequest(GetResponseEvent $event)
     {
         xhprof_enable();
         if ($this->logger)
