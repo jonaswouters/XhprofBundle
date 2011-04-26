@@ -2,9 +2,10 @@
 
 namespace Jns\Bundle\XhprofBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 
 class JnsXhprofExtension extends Extension
@@ -14,7 +15,6 @@ class JnsXhprofExtension extends Extension
      * @var array
      */
     protected $resources = array(
-        'config' => 'config.xml',
         'services' => 'services.xml',
     );
     
@@ -24,22 +24,19 @@ class JnsXhprofExtension extends Extension
      * @param array $configs
      * @param ContainerBuilder $container
      */
-    
     public function load(array $configs, ContainerBuilder $container)
     {
-        $config = array_shift($configs);
-        foreach ($configs as $tmp) {
-            $config = array_replace_recursive($config, $tmp);
-        }
+        $processor = new Processor();
+        $configuration = new Configuration();
+        $config = $processor->process($configuration->getConfigTree(), $configs);
 
-        $loader = $this->getFileLoader($container);
-        $loader->load($this->resources['config']);
-        $loader->load($this->resources['services']);
-
-        foreach ($config as $key => $value) {
-            $container->setParameter($this->getAlias().'.'.$key, $value);
+        if ($config['enabled']) {
+            $this->loadDefaults($container);
+            
+            foreach ($config as $key => $value) {
+                $container->setParameter($this->getAlias().'.'.$key, $value);
+            }
         }
-        
     }
 
     public function getAlias()
@@ -56,5 +53,13 @@ class JnsXhprofExtension extends Extension
     {
         return new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
     }
-    
+
+    protected function loadDefaults($container)
+    {
+        $loader = $this->getFileLoader($container);
+
+        foreach ($this->resources as $resource) {
+            $loader->load($resource);
+        }
+    }
 }
