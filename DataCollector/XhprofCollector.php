@@ -34,8 +34,8 @@ class XhprofCollector extends DataCollector
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
 
-        require_once $this->container->getParameter('jns_xhprof.location.lib');
-        require_once $this->container->getParameter('jns_xhprof.location.runs');
+        require_once $this->container->getParameter('jns_xhprof.location_lib');
+        require_once $this->container->getParameter('jns_xhprof.location_runs');
 
         $xhprof_data = xhprof_disable();
 
@@ -49,7 +49,7 @@ class XhprofCollector extends DataCollector
         
         $this->data = array(
             'xhprof' => $run_id,
-            'xhprof_url' => $this->container->getParameter('jns_xhprof.location.web'),
+            'xhprof_url' => $this->container->getParameter('jns_xhprof.location_web'),
         );
     }
 

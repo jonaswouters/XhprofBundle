@@ -65,9 +65,10 @@ To change these settings for your environment you can override the defaults by
 defining the following settings in your config. The config is usually located at `app/config/config.yml`.
 
     jns_xhprof:
-        location.lib: /opt/local/www/php5-xhprof/xhprof_lib/utils/xhprof_lib.php
-        location.runs: /opt/local/www/php5-xhprof/xhprof_lib/utils/xhprof_runs.php
-        location.web: http://xhprof.localhost
+        location_lib:   /opt/local/www/php5-xhprof/xhprof_lib/utils/xhprof_lib.php
+        location_runs:  /opt/local/www/php5-xhprof/xhprof_lib/utils/xhprof_runs.php
+        location_web:   http://xhprof.localhost
+        enabled:        true
 
 [1]: http://mirror.facebook.net/facebook/xhprof/doc.html
 [2]: http://www.macports.org/
