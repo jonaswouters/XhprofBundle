@@ -26,9 +26,9 @@ class Configuration
 
         $rootNode
             ->children()
-                ->scalarNode('location.lib')->defaultValue('/opt/local/www/php5-xhprof/xhprof_lib/utils/xhprof_lib.php')->end()
-                ->scalarNode('location.runs')->defaultValue('/opt/local/www/php5-xhprof/xhprof_lib/utils/xhprof_runs.php')->end()
-                ->scalarNode('location.web')->defaultValue('http://xhprof')->end()
+                ->scalarNode('location_lib')->defaultValue('/opt/local/www/php5-xhprof/xhprof_lib/utils/xhprof_lib.php')->end()
+                ->scalarNode('location_runs')->defaultValue('/opt/local/www/php5-xhprof/xhprof_lib/utils/xhprof_runs.php')->end()
+                ->scalarNode('location_web')->defaultValue('http://xhprof')->end()
                 ->scalarNode('enabled')->defaultFalse()->end()
             ->end();
 
