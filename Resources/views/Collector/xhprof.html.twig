@@ -2,6 +2,15 @@
 
 {% block toolbar %}
     {# the web debug toolbar content #}
-    <a href="{{ collector.xhprofurl }}">XHProf</a> 
+    {% set icon %}
+    {% endset %}
+    {% set text %}
+        {% spaceless %}
+            <span>
+                <a style="color: #2f2f2f" href="{{ collector.xhprofurl }}">XHProf</a>
+            </span>
+        {% endspaceless %}
+    {% endset %}
+    {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { 'link': collector.xhprofurl, 'icon': ''  } %}
 {% endblock %}
 
