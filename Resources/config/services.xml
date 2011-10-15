@@ -6,8 +6,9 @@
 
     <services>
         <service id="xhprof_listener" class="Jns\Bundle\XhprofBundle\RequestListener">
-            <tag name="kernel.event_listener" event="kernel.request" method="onCoreRequest" priority="0" />
-            <argument type="service" id="logger" on-invalid="null" />
+            <tag name="kernel.event_listener" event="kernel.response" method="onCoreResponse" priority="-10000" />
+            <tag name="kernel.event_listener" event="kernel.request" method="onCoreRequest" priority="10000" />
+            <argument type="service" id="data_collector.xhprof" />
         </service>
         <service id="data_collector.xhprof" class="Jns\Bundle\XhprofBundle\DataCollector\XhprofCollector">
             <tag name="data_collector" template="JnsXhprofBundle:Collector:xhprof" id="xhprof" />

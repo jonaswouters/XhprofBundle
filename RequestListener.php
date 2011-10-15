@@ -2,13 +2,13 @@
 
 namespace Jns\Bundle\XhprofBundle;
 
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
@@ -20,21 +20,24 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  */
 class RequestListener
 {
-    protected $logger;
+    protected $collector;
 
-    public function __construct(LoggerInterface $logger = null)
+    public function __construct(DataCollector\XhprofCollector $collector)
     {
-        $this->logger = $logger;
+        $this->collector = $collector;
     }
 
     public function onCoreRequest(GetResponseEvent $event)
     {
         if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
-            xhprof_enable();
-            if ($this->logger)
-            {
-                $this->logger->debug('Enabled XHProf');
-            }
+            $this->collector->startProfiling();
+        }
+    }
+
+    public function onCoreResponse(FilterResponseEvent $event)
+    {
+        if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
+            $this->collector->stopProfiling();
         }
     }
 }
