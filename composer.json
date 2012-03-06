@@ -1,0 +1,20 @@
+{
+    "name": "jns/xhprof-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony JnsXhprofBundle",
+    "keywords": ["xhprof"],
+    "homepage": "https://github.com/jonaswouters/XhprofBundle",
+    "authors": [
+        {
+            "name": "Jonas Wouters",
+            "email": "hello@jonaswouters.be"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2"
+    },
+    "autoload": {
+        "psr-0": { "Jns\\Bundle\\XhprofBundle": "" }
+    },
+    "target-dir": "Jns/Bundle/XhprofBundle"
+}
