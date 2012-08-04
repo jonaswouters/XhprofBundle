@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Jns\Bundle\XhprofBundle\DataCollector;
-
 
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -11,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use XHProfRuns_Default;
+use Symfony\Bundle\DoctrineBundle\Registry as DoctrineRegistry;
 
 /**
  * XhprofDataCollector.
@@ -22,12 +21,14 @@ class XhprofCollector extends DataCollector
     protected $container;
     protected $logger;
     protected $runId;
+    protected $doctrine;
     protected $profiling = false;
 
-    public function __construct(ContainerInterface $container, LoggerInterface $logger = null)
+    public function __construct(ContainerInterface $container, LoggerInterface $logger = null, DoctrineRegistry $doctrine = null)
     {
         $this->container = $container;
-        $this->logger = $logger;
+        $this->logger    = $logger;
+        $this->doctrine  = $doctrine;
     }
 
     /**
@@ -52,6 +53,12 @@ class XhprofCollector extends DataCollector
             $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'];
         }
 
+        if (false !== strpos($_SERVER['REQUEST_URI'], "_wdt") || false !== strpos($_SERVER['REQUEST_URI'], "_profiler")) {
+            $this->profiling = false;
+            
+            return;
+        }
+
         $this->profiling = true;
         xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
 
@@ -70,7 +77,7 @@ class XhprofCollector extends DataCollector
 
         $this->profiling = false;
 
-        require_once $this->container->getParameter('jns_xhprof.location_config');
+        //require_once $this->container->getParameter('jns_xhprof.location_config');
         require_once $this->container->getParameter('jns_xhprof.location_lib');
         require_once $this->container->getParameter('jns_xhprof.location_runs');
 
@@ -81,7 +88,75 @@ class XhprofCollector extends DataCollector
         }
 
         $xhprof_runs = new XHProfRuns_Default();
-        $this->runId = $xhprof_runs->save_run($xhprof_data, "Symfony");
+
+        if ($this->container->getParameter('jns_xhprof.enable_xhgui')) {
+            $this->saveProfilingDataToDB($xhprof_data);
+        } else {
+            $this->runId = $xhprof_runs->save_run($xhprof_data, "Symfony");    
+        }   
+    }
+
+    /**
+     * This function saves the profiling data as well as some additional data to a profiling database.
+     * 
+     * @param  array $xhprof_data
+     * @throws \Exception if doctrine was not injected correctly
+     */
+    private function saveProfilingDataToDB($xhprof_data)
+    {
+        $url   = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF'];
+        $sname = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
+
+        $pmu = isset($xhprof_data['main()']['pmu']) ? $xhprof_data['main()']['pmu'] : '';
+        $wt  = isset($xhprof_data['main()']['wt'])  ? $xhprof_data['main()']['wt']  : '';
+        $cpu = isset($xhprof_data['main()']['cpu']) ? $xhprof_data['main()']['cpu'] : '';        
+
+        if (empty($this->doctrine)) {
+            throw new \Exception("Trying to save to database, but Doctrine was not set correctly");
+        }
+
+        $em = $this->doctrine->getEntityManager($this->container->getParameter('jns_xhprof.entity_manager'));
+
+        $connection = $em->getConnection();
+        $sql = 'INSERT INTO xhprof (`id`, `url`, `c_url`, `timestamp`, `server name`, `perfdata`, `type`, `cookie`, `post`, `get`, `pmu`, `wt`, `cpu`, `server_id`, `aggregateCalls_include`) 
+                     VALUES (:run_id, :url, :canonical_url, null, :server_name, :perfdata, 0, :cookie, :post, :get, :pmu, :wt, :cpu, :server_id, \'\');';
+
+        $this->runId = uniqid();
+
+        $preparedStatement = $connection->prepare($sql);
+        
+        $preparedStatement->bindValue(':run_id', $this->runId);
+        $preparedStatement->bindValue(':url', $url);
+        $preparedStatement->bindValue(':canonical_url', $this->getCanonicalUrl($url));
+        $preparedStatement->bindValue(':server_name', $sname);
+        $preparedStatement->bindValue(':perfdata', gzcompress(json_encode($xhprof_data), 2));
+        $preparedStatement->bindValue(':cookie', json_encode($_COOKIE));
+        $preparedStatement->bindValue(':post', json_encode($_POST));
+        $preparedStatement->bindValue(':get', json_encode($_GET));
+        $preparedStatement->bindValue(':pmu', $pmu);
+        $preparedStatement->bindValue(':wt', $wt);
+        $preparedStatement->bindValue(':cpu', $cpu);
+        $preparedStatement->bindValue(':server_id', getenv('SERV_NAME'));
+        $preparedStatement->execute();
+    }
+
+    /**
+     * Return the canonical URL for the passed in one. 
+     * 
+     * @param  String $url
+     * @return String
+     */
+    protected function getCanonicalUrl($url)
+    {
+        if ($url[0] == '#') {
+            $url = substr($url, 1, -1);
+
+            if (substr($url, -1) == '$') {
+                $url = substr($url, 0, -1);
+            }
+        }
+
+        return $url;
     }
 
     /**
