@@ -71,6 +71,16 @@ defining the following settings in your config. The config is usually located at
         location_web:    http://xhprof.localhost
         enabled:         true
 
+### Using XHGui
+
+[XHGui][3] is a GUI for the XHProf PHP extension, using a database backend, and pretty graphs to make it easy to use and interpret. The XHProf bundle supports using XHGui to display the results. To use, install XHGui, and add the following two settings to the configuration, usually located at `app/config/config.yml`: 
+    
+    jns_xhprof:
+        entity_manager:  <name_of_entity_manager> (defaults to default)
+        enable_xhgui:    true
+
+If you only have one entity manager defined, you don't need to set it here. This setting is for the case where you are using a seperate profiling database for XHGui (highly recommended).
+
 [1]: http://mirror.facebook.net/facebook/xhprof/doc.html
 [2]: http://www.macports.org/
-
+[3]: https://github.com/preinheimer/xhprof
