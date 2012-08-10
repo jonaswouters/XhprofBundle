@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use XHProfRuns_Default;
-use Symfony\Bundle\DoctrineBundle\Registry as DoctrineRegistry;
+use Doctrine\Bundle\DoctrineBundle\Registry as DoctrineRegistry;
 
 /**
  * XhprofDataCollector.
@@ -54,6 +54,12 @@ class XhprofCollector extends DataCollector
         }
 
         if (false !== strpos($_SERVER['REQUEST_URI'], "_wdt") || false !== strpos($_SERVER['REQUEST_URI'], "_profiler")) {
+            $this->profiling = false;
+            
+            return;
+        }
+
+        if (mt_rand(1, $this->container->getParameter('jns_xhprof.sample_size')) != 1) {
             $this->profiling = false;
             
             return;

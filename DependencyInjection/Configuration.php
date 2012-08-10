@@ -31,7 +31,8 @@ class Configuration
                 ->scalarNode('location_runs')->defaultValue('/opt/local/www/php5-xhprof/xhprof_lib/utils/xhprof_runs.php')->end()
                 ->scalarNode('location_web')->defaultValue('http://xhprof')->end()
                 ->scalarNode('entity_manager')->defaultValue('default')->end()
-                ->scalarNode('enable_xhgui')->defaultFalse()->end()    
+                ->scalarNode('enable_xhgui')->defaultFalse()->end()
+                ->scalarNode('sample_size')->defaultValue(1)->end()    
                 ->scalarNode('enabled')->defaultFalse()->end()
             ->end();
 
