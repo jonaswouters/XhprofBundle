@@ -59,6 +59,12 @@ class XhprofCollector extends DataCollector
             return;
         }
 
+        if (mt_rand(1, $this->container->getParameter('jns_xhprof.sample_size')) != 1) {
+            $this->profiling = false;
+            
+            return;
+        }
+
         $this->profiling = true;
         xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
 
