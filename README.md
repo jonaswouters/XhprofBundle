@@ -81,6 +81,13 @@ defining the following settings in your config. The config is usually located at
 
 If you only have one entity manager defined, you don't need to set it here. This setting is for the case where you are using a seperate profiling database for XHGui (highly recommended).
 
+### Specifying a Sample Size
+
+You can specify a sample size for profiling. This is highly suggested for production environments that have plenty of requests. The sample size is set as a probability for profiling, so for example, if you set the sample size to 2, then on average, every second request will be profiled. Of course, in production you want to set it to a much higher value. Defaults to 1, so that every request will be profiled.  
+
+    jns_xhprof:
+        sample_size: 2
+
 [1]: http://mirror.facebook.net/facebook/xhprof/doc.html
 [2]: http://www.macports.org/
 [3]: https://github.com/preinheimer/xhprof
