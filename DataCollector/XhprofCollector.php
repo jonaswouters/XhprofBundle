@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use XHProfRuns_Default;
-use Symfony\Bundle\DoctrineBundle\Registry as DoctrineRegistry;
+use Doctrine\Bundle\DoctrineBundle\Registry as DoctrineRegistry;
 
 /**
  * XhprofDataCollector.
