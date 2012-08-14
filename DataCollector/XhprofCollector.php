@@ -44,6 +44,8 @@ class XhprofCollector extends DataCollector
             'xhprof' => $this->runId,
             'xhprof_url' => $this->container->getParameter('jns_xhprof.location_web'),
         );
+        
+        $response->headers->set('X-Xhprof-Url', $this->getXhprofUrl());
     }
 
     public function startProfiling()
