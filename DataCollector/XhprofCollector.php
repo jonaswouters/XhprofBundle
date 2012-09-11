@@ -85,7 +85,7 @@ class XhprofCollector extends DataCollector
 
         $this->profiling = false;
 
-        //require_once $this->container->getParameter('jns_xhprof.location_config');
+        require_once $this->container->getParameter('jns_xhprof.location_config');
         require_once $this->container->getParameter('jns_xhprof.location_lib');
         require_once $this->container->getParameter('jns_xhprof.location_runs');
 
@@ -193,5 +193,15 @@ class XhprofCollector extends DataCollector
     public function getXhprofUrl()
     {
         return $this->data['xhprof_url'] . '?run=' . $this->data['xhprof'] . '&source=Symfony';
+    }
+
+    /**
+     * Gets the XHProf url.
+     *
+     * @return integer The XHProf url
+     */
+    public function isProfiling()
+    {
+        return $this->data['xhprof']  ? true : false;
     }
 }
