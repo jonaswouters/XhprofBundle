@@ -1,16 +1,28 @@
 {% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
 
 {% block toolbar %}
-    {# the web debug toolbar content #}
     {% set icon %}
+        {# icon by Apostolos Paschalidis interactivemania #}
+        <img width="16" height="28" alt="Time" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAWxJREFUeNrsmGsNhDAQhJGAhEpAQiWchEpAQh0gAQlIQEIlVAISOEhKQjh6nb6gm3SS/UUg+7Wd3S1NU1VVVUVdfIuBMsC4xbJFSzH5PenVhKQI0J8AFooA+gSwh6CUfHdJfjVApMy73oSgYt7FAqAoAAhL8kfw0gGUA2CmZt676KiZ9xpjxGjyuHm1BYJ5fp+Z9z5PmleZVUuxC9NpQdqnzNubZ7MFovU4OmvO2apzJGgrrWgiOsER9DbvBCSBjNoydzm2mfcDNrg+sKsnM7SwrCx6FHREWU5i6DvzDsAdwTXkcbCnyBzm7QJ6xVUzCAAbGv2YCjQlB/yCQEUD9IGmnx3Pj4o15QZATDX82YXBcdaZozJFAUyec83d8UOqjcwF4FOXR49dFWBJjgLw/XXCwOQ1OB85Ad66PxR9BXU1q6Kvn0jD4hQAeGRFK3YXGCUAkejS/6q0xyWn6F2QDWEpqqtfVVVV9auvAAMA8q2w4zLdcK8AAAAASUVORK5CYII=">
+        <span>XHProf</span>
     {% endset %}
-    {% set text %}
-        {% spaceless %}
-            <span>
-                <a style="color: #2f2f2f" href="{{ collector.xhprofurl }}">XHProf</a>
-            </span>
-        {% endspaceless %}
+    {% if not collector.profiling %}
+        {% set text %}
+            {% spaceless %}
+                <span>Not profiling</span>
+            {% endspaceless %}
+        {% endset %}
+    {% endif %}
+    {% set icon %}
+        {% if collector.profiling %}
+            <a href="{{ collector.xhprofurl }}">{{ icon }}</a>
+        {% else %}
+            <span>{{ icon }}</span>
+        {% endif %}
     {% endset %}
-    {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { 'link': collector.xhprofurl, 'icon': ''  } %}
+    <div class="sf-toolbar-block">
+        <div class="sf-toolbar-icon">{{ icon|default('') }}</div>
+        <div class="sf-toolbar-info">{{ text|default('') }}</div>
+    </div>
 {% endblock %}
 
