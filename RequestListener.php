@@ -21,22 +21,26 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class RequestListener
 {
     protected $collector;
+    protected $request;
 
-    public function __construct(DataCollector\XhprofCollector $collector)
+    public function __construct(DataCollector\XhprofCollector $collector, Request $request)
     {
         $this->collector = $collector;
+        $this->request = $request;
     }
 
     public function onCoreRequest(GetResponseEvent $event)
     {
-        if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
+        if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType() &&
+            1 == $this->request->get('_profile')) {
             $this->collector->startProfiling();
         }
     }
 
     public function onCoreResponse(FilterResponseEvent $event)
     {
-        if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
+        if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType() &&
+            1 == $this->request->get('_profile')) {
             $this->collector->stopProfiling();
         }
     }
