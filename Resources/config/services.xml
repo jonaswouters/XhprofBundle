@@ -5,10 +5,11 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="xhprof_listener" class="Jns\Bundle\XhprofBundle\RequestListener">
+        <service id="xhprof_listener" class="Jns\Bundle\XhprofBundle\RequestListener" scope="request">
             <tag name="kernel.event_listener" event="kernel.response" method="onCoreResponse" priority="-10000" />
             <tag name="kernel.event_listener" event="kernel.request" method="onCoreRequest" priority="10000" />
             <argument type="service" id="data_collector.xhprof" />
+            <argument type="service" id="request" />
         </service>
         <service id="data_collector.xhprof" class="Jns\Bundle\XhprofBundle\DataCollector\XhprofCollector">
             <tag name="data_collector" template="JnsXhprofBundle:Collector:xhprof" id="xhprof" />
