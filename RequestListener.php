@@ -31,14 +31,16 @@ class RequestListener
 
     public function onCoreRequest(GetResponseEvent $event)
     {
-        if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
+        if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType() &&
+            1 == $this->request->get('_profile')) {
             $this->collector->startProfiling();
         }
     }
 
     public function onCoreResponse(FilterResponseEvent $event)
     {
-        if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
+        if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType() &&
+            1 == $this->request->get('_profile')) {
             $this->collector->stopProfiling();
         }
     }
