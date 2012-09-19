@@ -21,10 +21,12 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class RequestListener
 {
     protected $collector;
+    protected $request;
 
-    public function __construct(DataCollector\XhprofCollector $collector)
+    public function __construct(DataCollector\XhprofCollector $collector, Request $request)
     {
         $this->collector = $collector;
+        $this->request = $request;
     }
 
     public function onCoreRequest(GetResponseEvent $event)
