@@ -43,22 +43,22 @@ class XhprofDetail
     protected $type;
 
     /**
-     * @ORM\Column(name="perfdata", type="text", nullable=false)
+     * @ORM\Column(name="perfdata", type="blob", nullable=false)
      */
     protected $perfData;
 
     /**
-     * @ORM\Column(name="cookie", type="text", nullable=false)
+     * @ORM\Column(name="cookie", type="blob", nullable=false)
      */
     protected $cookie;
 
     /**
-     * @ORM\Column(name="post", type="text", nullable=false)
+     * @ORM\Column(name="post", type="blob", nullable=false)
      */
     protected $post;
 
     /**
-     * @ORM\Column(name="get", type="text", nullable=false)
+     * @ORM\Column(name="get", type="blob", nullable=false)
      */
     protected $get;
 
