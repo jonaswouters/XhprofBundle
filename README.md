@@ -23,15 +23,39 @@ Make sure you have XHProf installed.
 If you are on a mac you can easily install it via [Macports][2]
     sudo port install php5-xhprof
 
-### Composer
+1. ### Composer
 
-Add the following dependencies to your projects composer.json file:
-
+  Add the following dependencies to your projects composer.json file:
+    
+    ```json
     "require": {
         # ..
         "jns/xhprof-bundle": "dev-master"
         # ..
     }
+    ```
+
+2. ### Old way by adding to your vendor/bundles/ dir
+
+  1. #### To install the bundle, place it in the `src/Jns/Bundle` directory of your project
+(so that it lives at `src/Jns/Bundle/XhprofBundle`). You can do this by adding
+the bundle as a submodule, cloning it, or simply downloading the source.
+
+    ```shell
+    git submodule add https://github.com/jonaswouters/XhprofBundle.git src/Jns/Bundle/XhprofBundle
+    ```
+
+  2. #### Add the Jns namespace to your autoloader
+
+    If this is the first Jns bundle in your Symfony 2 project, you'll
+need to add the `Jns` namespace to your autoloader. This file is usually located at `app/autoload.php`.
+
+    ```php
+    $loader->registerNamespaces(array(
+        'Jns' => __DIR__.'/../src'
+        // ...
+    ));
+    ```
 
 
 ### Initializing the bundle
