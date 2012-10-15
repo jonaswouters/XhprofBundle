@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * @ORM\Table(name="xhprof")
+ * @ORM\Table(name="details")
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */
