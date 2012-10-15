@@ -58,13 +58,11 @@ class XhprofCollector extends DataCollector
 
         if (false !== strpos($_SERVER['REQUEST_URI'], "_wdt") || false !== strpos($_SERVER['REQUEST_URI'], "_profiler")) {
             $this->profiling = false;
-
             return;
         }
 
         if (mt_rand(1, $this->container->getParameter('jns_xhprof.sample_size')) != 1) {
             $this->profiling = false;
-
             return;
         }
 
@@ -125,26 +123,26 @@ class XhprofCollector extends DataCollector
         }
 
         $em = $this->doctrine->getEntityManager($this->container->getParameter('jns_xhprof.entity_manager'));
-
         $xhprofDetail = new XhprofDetail();
         $xhprofDetail
-            ->setId($this->runId)
             ->setUrl($url)
             ->setCanonicalUrl($this->getCanonicalUrl($url))
             ->setServerName($sname)
-            ->setPerfData(gzcompress(json_encode($xhprof_data), 2))
-            ->setCookie(json_encode($_COOKIE))
-            ->setPost(json_encode($_POST))
-            ->setGet(json_encode($_GET))
+            ->setPerfData(gzcompress(serialize(($xhprof_data))))
+            ->setCookie(serialize($_COOKIE))
+            ->setPost(serialize($_POST))
+            ->setGet(serialize($_GET))
             ->setPmu($pmu)
             ->setWt($wt)
             ->setCpu($cpu)
-            ->setServerId(getenv('SERV_NAME'))
+            ->setServerId(getenv('SERVER_NAME'))
             ->setAggregateCallsInclude('')
             ;
 
         $em->persist($xhprofDetail);
         $em->flush();
+
+        $this->runId = $xhprofDetail->getId();
     }
 
     /**
