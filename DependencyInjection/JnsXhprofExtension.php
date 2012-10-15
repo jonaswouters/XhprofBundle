@@ -17,7 +17,7 @@ class JnsXhprofExtension extends Extension
     protected $resources = array(
         'services' => 'services.xml',
     );
-    
+
     /**
      * Loads the services based on your application configuration.
      *
@@ -30,9 +30,9 @@ class JnsXhprofExtension extends Extension
         $configuration = new Configuration();
         $config = $processor->process($configuration->getConfigTree(), $configs);
 
-        if ($config['enabled']) {
+        if ($config['enabled'] && function_exists('xhprof_enable')) {
             $this->loadDefaults($container);
-            
+
             foreach ($config as $key => $value) {
                 $container->setParameter($this->getAlias().'.'.$key, $value);
             }
