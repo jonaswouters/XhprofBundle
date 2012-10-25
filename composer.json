@@ -11,8 +11,10 @@
         }
     ],
     "require": {
-        "php": ">=5.3.2",
-        "ext-xhprof": "*"
+        "php": ">=5.3.2"
+    },
+    "suggest": {
+        "ext-xhprof": "Hierarchical Profiler for PHP"
     },
     "autoload": {
         "psr-0": { "Jns\\Bundle\\XhprofBundle": "" }
