@@ -79,7 +79,7 @@ file is usually located at `app/AppKernel.php`. Loading it only in your dev envi
 The Bundle comes preconfigured for the macports php5-xhprof default installation, 
 with the xhprof web located at http://xhprof.localhost.
 To change these settings for your environment you can override the defaults by
-defining the following settings in your config. The config is usually located at `app/config/config.yml`.
+defining the following settings in your config. The config is usually located at `app/config/config_dev.yml`.
 
     jns_xhprof:
         location_lib:    /opt/local/www/php5-xhprof/xhprof_lib/utils/xhprof_lib.php
