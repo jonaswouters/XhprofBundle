@@ -4,11 +4,9 @@ namespace Jns\Bundle\XhprofBundle\DataCollector;
 
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use XHProfRuns_Default;
 use Doctrine\Bundle\DoctrineBundle\Registry as DoctrineRegistry;
 use Jns\Bundle\XhprofBundle\Entity\XhprofDetail;
 
@@ -67,7 +65,7 @@ class XhprofCollector extends DataCollector
         }
 
         $this->profiling = true;
-        xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
+        xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
 
         if ($this->logger) {
             $this->logger->debug('Enabled XHProf');
@@ -84,7 +82,12 @@ class XhprofCollector extends DataCollector
 
         $this->profiling = false;
 
-        require_once $this->container->getParameter('jns_xhprof.location_config');
+        $enableXhgui = $this->container->getParameter('jns_xhprof.enable_xhgui');
+        
+        if ($enableXhgui) {
+          require_once $this->container->getParameter('jns_xhprof.location_config');
+        }
+        
         require_once $this->container->getParameter('jns_xhprof.location_lib');
         require_once $this->container->getParameter('jns_xhprof.location_runs');
 
@@ -94,10 +97,10 @@ class XhprofCollector extends DataCollector
             $this->logger->debug('Disabled XHProf');
         }
 
-        $xhprof_runs = new XHProfRuns_Default();
+        $xhprof_runs = new \XHProfRuns_Default();
 
-        if ($this->container->getParameter('jns_xhprof.enable_xhgui')) {
-            $this->saveProfilingDataToDB($xhprof_data);
+        if ($enableXhgui) {
+            $this->runId = $this->saveProfilingDataToDB($xhprof_data);
         } else {
             $this->runId = $xhprof_runs->save_run($xhprof_data, "Symfony");
         }
@@ -108,6 +111,7 @@ class XhprofCollector extends DataCollector
      *
      * @param  array $xhprof_data
      * @throws \Exception if doctrine was not injected correctly
+     * @return string   Returns the run id for the saved XHProf run
      */
     private function saveProfilingDataToDB($xhprof_data)
     {
@@ -122,9 +126,12 @@ class XhprofCollector extends DataCollector
             throw new \Exception("Trying to save to database, but Doctrine was not set correctly");
         }
 
+        $runId = uniqid();
+        
         $em = $this->doctrine->getEntityManager($this->container->getParameter('jns_xhprof.entity_manager'));
         $xhprofDetail = new XhprofDetail();
         $xhprofDetail
+            ->setId($runId)
             ->setUrl($url)
             ->setCanonicalUrl($this->getCanonicalUrl($url))
             ->setServerName($sname)
@@ -141,8 +148,8 @@ class XhprofCollector extends DataCollector
 
         $em->persist($xhprofDetail);
         $em->flush();
-
-        $this->runId = $xhprofDetail->getId();
+        
+        return $runId;
     }
 
     /**
