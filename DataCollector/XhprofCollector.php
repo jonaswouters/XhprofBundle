@@ -2,7 +2,7 @@
 
 namespace Jns\Bundle\XhprofBundle\DataCollector;
 
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use \Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -128,7 +128,7 @@ class XhprofCollector extends DataCollector
 
         $runId = uniqid();
         
-        $em = $this->doctrine->getEntityManager($this->container->getParameter('jns_xhprof.entity_manager'));
+        $em = $this->doctrine->getManager($this->container->getParameter('jns_xhprof.entity_manager'));
         $xhprofDetail = new XhprofDetail();
         $xhprofDetail
             ->setId($runId)
