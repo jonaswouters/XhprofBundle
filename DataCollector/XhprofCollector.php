@@ -2,7 +2,9 @@
 
 namespace Jns\Bundle\XhprofBundle\DataCollector;
 
-use \Psr\Log\LoggerInterface;
+// supports 2.0, 2.1 LoggerInterface
+use Symfony\Component\HttpKernel\Log\LoggerInterface as HttpKernelLoggerInterface;
+use Psr\Log\LoggerInterface as PsrLoggerInterface;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,9 +25,14 @@ class XhprofCollector extends DataCollector
     protected $doctrine;
     protected $profiling = false;
 
-    public function __construct(ContainerInterface $container, LoggerInterface $logger = null, DoctrineRegistry $doctrine = null)
+    public function __construct(ContainerInterface $container, $logger = null, DoctrineRegistry $doctrine = null)
     {
         $this->container = $container;
+
+        if (!$logger instanceof HttpKernelLoggerInterface && !$logger instanceof PsrLoggerInterface) {
+            throw new \InvalidArgumentException('Logger must be an instance of Symfony\Component\HttpKernel\Log\LoggerInterface or Psr\Log\LoggerInterface');
+        }
+
         $this->logger    = $logger;
         $this->doctrine  = $doctrine;
     }
@@ -83,11 +90,11 @@ class XhprofCollector extends DataCollector
         $this->profiling = false;
 
         $enableXhgui = $this->container->getParameter('jns_xhprof.enable_xhgui');
-        
+
         if ($enableXhgui) {
           require_once $this->container->getParameter('jns_xhprof.location_config');
         }
-        
+
         require_once $this->container->getParameter('jns_xhprof.location_lib');
         require_once $this->container->getParameter('jns_xhprof.location_runs');
 
@@ -127,7 +134,7 @@ class XhprofCollector extends DataCollector
         }
 
         $runId = uniqid();
-        
+
         $em = $this->doctrine->getManager($this->container->getParameter('jns_xhprof.entity_manager'));
         $xhprofDetail = new XhprofDetail();
         $xhprofDetail
@@ -148,7 +155,7 @@ class XhprofCollector extends DataCollector
 
         $em->persist($xhprofDetail);
         $em->flush();
-        
+
         return $runId;
     }
 
