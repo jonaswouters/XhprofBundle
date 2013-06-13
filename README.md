@@ -35,7 +35,7 @@ If you are on a mac you can easily install it via [Macports][2]
     }
     ```
 
-  Of course, you have to install ![xhprof library](http://php.net/manual/fr/book.xhprof.php) in your server.
+  Of course, you have to install [xhprof library](http://php.net/manual/fr/book.xhprof.php) in your server.
   At this moment, `ext-xhprof` is not required because your application could be deployed to a server without xhprof.
 
 2. ### Old way by adding to your vendor/bundles/ dir
