@@ -57,7 +57,7 @@ class XhprofDetail
     protected $post;
 
     /**
-     * @ORM\Column(name="get", type="blob", nullable=false)
+     * @ORM\Column(name="`get`", type="blob", nullable=false)
      */
     protected $get;
 
