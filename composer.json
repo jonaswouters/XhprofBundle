@@ -24,5 +24,10 @@
             "Jns\\Bundle\\XhprofBundle": ""
         }
     },
-    "target-dir": "Jns/Bundle/XhprofBundle"
+    "target-dir": "Jns/Bundle/XhprofBundle",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+     }
 }
