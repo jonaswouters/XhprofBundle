@@ -43,15 +43,8 @@ class XhprofCollector extends DataCollector
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
         if (!$this->runId) {
-            $this->stopProfiling();
+            $this->stopProfiling($response);
         }
-
-        $this->data = array(
-            'xhprof' => $this->runId,
-            'xhprof_url' => $this->container->getParameter('jns_xhprof.location_web'),
-        );
-
-        $response->headers->set('X-Xhprof-Url', $this->getXhprofUrl());
     }
 
     public function startProfiling()
@@ -79,10 +72,8 @@ class XhprofCollector extends DataCollector
         }
     }
 
-    public function stopProfiling()
+    public function stopProfiling(Response $response)
     {
-        global $_xhprof;
-
         if (!$this->profiling) {
             return;
         }
@@ -90,13 +81,6 @@ class XhprofCollector extends DataCollector
         $this->profiling = false;
 
         $enableXhgui = $this->container->getParameter('jns_xhprof.enable_xhgui');
-
-        if ($enableXhgui) {
-          require_once $this->container->getParameter('jns_xhprof.location_config');
-        }
-
-        require_once $this->container->getParameter('jns_xhprof.location_lib');
-        require_once $this->container->getParameter('jns_xhprof.location_runs');
 
         $xhprof_data = xhprof_disable();
 
@@ -110,6 +94,16 @@ class XhprofCollector extends DataCollector
             $this->runId = $this->saveProfilingDataToDB($xhprof_data);
         } else {
             $this->runId = $xhprof_runs->save_run($xhprof_data, "Symfony");
+        }
+
+
+        $this->data = array(
+            'xhprof' => $this->runId,
+            'xhprof_url' => $this->container->getParameter('jns_xhprof.location_web'),
+        );
+        $headerName = $this->container->getParameter('jns_xhprof.response_header');
+        if ($headerName) {
+            $response->headers->set($headerName, $this->getXhprofUrl());
         }
     }
 
