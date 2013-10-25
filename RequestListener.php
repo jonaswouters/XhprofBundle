@@ -28,7 +28,7 @@ class RequestListener
     public function onCoreRequest(GetResponseEvent $event)
     {
         if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
-            $this->collector->startProfiling();
+            $this->collector->startProfiling($event->getRequest());
         }
     }
 
