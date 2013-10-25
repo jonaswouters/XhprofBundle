@@ -5,8 +5,8 @@ What is XHProf?
 ---------------
 
 XHProf is a hierarchical profiler for PHP. It reports function-level call counts and inclusive and exclusive metrics such as wall (elapsed) time, CPU time and memory usage.
-A function's profile can be broken down by callers or callees. The raw data collection component is implemented in C as a PHP Zend extension called xhprof. 
-XHProf has a simple HTML based user interface (written in PHP). The browser based UI for viewing profiler results makes it easy to view results or to share results with peers. 
+A function's profile can be broken down by callers or callees. The raw data collection component is implemented in C as a PHP Zend extension called xhprof.
+XHProf has a simple HTML based user interface (written in PHP). The browser based UI for viewing profiler results makes it easy to view results or to share results with peers.
 A callgraph image view is also supported.
 
 See [official documentation][1]
@@ -19,7 +19,7 @@ This bundle helps you to easily use the XHProf bundle with the web debug toolbar
 
 ## Installation
 
-Make sure you have XHProf installed. 
+Make sure you have XHProf installed.
 If you are on a mac you can easily install it via [Macports][2]
     sudo port install php5-xhprof
 
@@ -79,22 +79,19 @@ file is usually located at `app/AppKernel.php`. Loading it only in your dev envi
 
 ### Configure the XHProf locations.
 
-The Bundle comes preconfigured for the macports php5-xhprof default installation, 
+The Bundle comes preconfigured for the macports php5-xhprof default installation,
 with the xhprof web located at http://xhprof.localhost.
 To change these settings for your environment you can override the defaults by
 defining the following settings in your config. The config is usually located at `app/config/config_dev.yml`.
 
     jns_xhprof:
-        location_lib:    /opt/local/www/php5-xhprof/xhprof_lib/utils/xhprof_lib.php
-        location_runs:   /opt/local/www/php5-xhprof/xhprof_lib/utils/xhprof_runs.php
-        location_config: /opt/local/www/php5-xhprof/xhprof_lib/config.php
         location_web:    http://xhprof.localhost
         enabled:         true
 
 ### Using XHGui
 
-[XHGui][3] is a GUI for the XHProf PHP extension, using a database backend, and pretty graphs to make it easy to use and interpret. The XHProf bundle supports using XHGui to display the results. To use, install XHGui, and add the following two settings to the configuration, usually located at `app/config/config.yml`: 
-    
+[XHGui][3] is a GUI for the XHProf PHP extension, using a database backend, and pretty graphs to make it easy to use and interpret. The XHProf bundle supports using XHGui to display the results. To use, install XHGui, and add the following two settings to the configuration, usually located at `app/config/config.yml`:
+
     jns_xhprof:
         entity_manager:  <name_of_entity_manager> (defaults to default)
         enable_xhgui:    true
@@ -103,10 +100,21 @@ If you only have one entity manager defined, you don't need to set it here. This
 
 ### Specifying a Sample Size
 
-You can specify a sample size for profiling. This is highly suggested for production environments that have plenty of requests. The sample size is set as a probability for profiling, so for example, if you set the sample size to 2, then on average, every second request will be profiled. Of course, in production you want to set it to a much higher value. Defaults to 1, so that every request will be profiled.  
+You can specify a sample size for profiling. This is highly suggested for production environments that have plenty of requests. The sample size is set as a probability for profiling, so for example, if you set the sample size to 2, then on average, every second request will be profiled. Of course, in production you want to set it to a much higher value. Defaults to 1, so that every request will be profiled.
 
     jns_xhprof:
         sample_size: 2
+
+### Enabling XHProf only for arbitrary requests
+
+It's possible to configure `request_query_argument` parameter in configuration. XHProf would be enabled ony for requests with this query argument in this case.
+
+### Using XHProf with disabled Symfony Profiler
+
+The most common case is the `prod` mode. Symfony Profiler is disabled by default in this mode.
+It is possible to configure XHProf Bundle to send custom Response header with XHProf web UI URL for the current token.
+Header name could be configured with `response_header` parameter in bundle configuration.
+Empty value disables this header completely. Default header name is `X-Xhprof-Url`.
 
 [1]: http://mirror.facebook.net/facebook/xhprof/doc.html
 [2]: http://www.macports.org/
