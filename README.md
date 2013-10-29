@@ -29,9 +29,8 @@ If you are on a mac you can easily install it via [Macports][2]
 
     ```json
     "require": {
-        # ..
-        "jns/xhprof-bundle": "dev-master"
-        # ..
+        "jns/xhprof-bundle": "dev-master",
+        "facebook/xhprof": "dev-master"
     }
     ```
 
