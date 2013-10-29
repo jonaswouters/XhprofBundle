@@ -109,7 +109,7 @@ class XhprofCollector extends DataCollector
         );
         $headerName = $this->container->getParameter('jns_xhprof.response_header');
         if ($headerName) {
-            $response->headers->set($headerName, $this->getXhprofUrl());
+            $response->headers->set($headerName, $this->data['xhprof']);
         }
     }
 
