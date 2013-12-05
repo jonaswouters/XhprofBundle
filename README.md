@@ -106,7 +106,14 @@ You can specify a sample size for profiling. This is highly suggested for produc
 
 ### Enabling XHProf only for arbitrary requests
 
-It's possible to configure `request_query_argument` parameter in configuration. XHProf would be enabled ony for requests with this query argument in this case.
+It's possible to configure `request_query_argument` parameter in configuration. XHProf would be enabled only for requests with this query argument in this case.
+
+### Enabling XHProf only for matching pattern request
+
+It's possible to configure `exclude_patterns` parameter in configuration. XHProf would be enabled only for requests which will match these patterns.
+
+    jns_xhprof:
+        exclude_patterns: ['/css/', '/js/']
 
 ### Using XHProf with disabled Symfony Profiler
 
