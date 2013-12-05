@@ -28,7 +28,7 @@ class Configuration
             ->children()
                 ->scalarNode('location_web')->defaultValue('http://xhprof')->end()
                 ->scalarNode('entity_manager')->defaultValue('default')->end()
-                ->variableNode('exclude_patterns')->defaultFalse()->end()
+                ->arrayNode('exclude_patterns')->prototype('scalar')->end()->end()
                 ->scalarNode('enable_xhgui')->defaultFalse()->end()
                 ->scalarNode('sample_size')->defaultValue(1)->end()
                 ->scalarNode('enabled')->defaultFalse()->end()
