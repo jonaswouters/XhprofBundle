@@ -65,6 +65,15 @@ class XhprofCollector extends DataCollector
             return;
         }
 
+        if ($excludePatterns = $this->container->getParameter('jns_xhprof.exclude_patterns')) {
+            foreach ($excludePatterns as $exclude) {
+                if (preg_match('@' . $exclude . '@', $request->getRequestUri())) {
+                    $this->profiling = false;
+                    return;
+                }
+            }
+        }
+
         if (mt_rand(1, $this->container->getParameter('jns_xhprof.sample_size')) != 1) {
             $this->profiling = false;
             return;
