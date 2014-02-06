@@ -3,6 +3,7 @@
 namespace Jns\Bundle\XhprofBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\NodeInterface;
 
 /**
  * This class contains the configuration information for the bundle
@@ -17,7 +18,7 @@ class Configuration
     /**
      * Generates the configuration tree.
      *
-     * @return \Symfony\Component\DependencyInjection\Configuration\NodeInterface
+     * @return NodeInterface
      */
     public function getConfigTree()
     {
@@ -34,6 +35,23 @@ class Configuration
                 ->scalarNode('enabled')->defaultFalse()->end()
                 ->scalarNode('request_query_argument')->defaultFalse()->end()
                 ->scalarNode('response_header')->defaultValue('X-Xhprof-Run-Id')->end()
+                ->enumNode('command')
+                    ->values(array('on', 'option', 'off'))
+                    ->defaultValue('option')
+                    ->info('on: Always profile, off: Never profile, option: only profile if option specified in command_option_name is given.')
+                ->end()
+                ->scalarNode('command_option_name')
+                    ->defaultValue('xhprof')
+                    ->info('If "command" is set to "option", this is the name of the additional option that all commands get.')
+                ->end()
+                ->arrayNode('command_exclude_patterns')
+                    ->prototype('scalar')->end()
+                    ->beforeNormalization()
+                        ->ifTrue(function($v) { return $v === null; })
+                        ->then(function($v) { return array(); })
+                    ->end()
+                    ->info('List of regular expressions to match commands that are not profiled.')
+                ->end()
             ->end();
 
         return $treeBuilder->buildTree();

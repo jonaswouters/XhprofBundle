@@ -15,7 +15,7 @@ What does this Symfony 2 Bundle do?
 -----------------------------------
 
 This bundle helps you to easily use the XHProf bundle with the web debug toolbar in Symfony 2.
-
+With Symfony 2.3 and newer, it can also profile console commands.
 
 ## Installation
 
@@ -29,8 +29,8 @@ If you are on a mac you can easily install it via [Macports][2]
 
     ```json
     "require": {
-        "jns/xhprof-bundle": "dev-master",
-        "facebook/xhprof": "dev-master"
+        "jns/xhprof-bundle": "1.0.*@dev",
+        "facebook/xhprof": "dev-master@dev"
     }
     ```
 
@@ -75,6 +75,7 @@ file is usually located at `app/AppKernel.php`. Loading it only in your dev envi
         }
     )
 
+## Configuration
 
 ### Configure the XHProf locations.
 
@@ -86,6 +87,8 @@ defining the following settings in your config. The config is usually located at
     jns_xhprof:
         location_web:    http://xhprof.localhost
         enabled:         true
+
+Do not forget to set `enabled` to `true`, or the profiler will never be activated.
 
 ### Using XHGui
 
@@ -99,28 +102,78 @@ If you only have one entity manager defined, you don't need to set it here. This
 
 ### Specifying a Sample Size
 
-You can specify a sample size for profiling. This is highly suggested for production environments that have plenty of requests. The sample size is set as a probability for profiling, so for example, if you set the sample size to 2, then on average, every second request will be profiled. Of course, in production you want to set it to a much higher value. Defaults to 1, so that every request will be profiled.
+You can specify a sample size for profiling. This is useful to collect random
+samples of real requests in production environments. If you have plenty of
+requests, you really don't want to profile all of them.
+
+The sample size is set as a probability for profiling, so for example, if you
+set the sample size to 2, then on average, every second request will be profiled.
+Of course, in production you want to set it to a much higher value. Defaults
+to 1, so that every request will be profiled.
 
     jns_xhprof:
         sample_size: 2
 
-### Enabling XHProf only for arbitrary requests
+### Web request profiling
 
-It's possible to configure `request_query_argument` parameter in configuration. XHProf would be enabled only for requests with this query argument in this case.
+#### Enabling XHProf only for requests with a trigger parameter
 
-### Enabling XHProf only for matching pattern request
+You can specify a `request_query_argument` parameter to have XHProf only activate
+on requests that have this argument. This can be useful to profile a production
+system without impacting other requests too much.
+
+    jns_xhprof:
+        request_query_argument: "__xhprof"
+
+#### Enabling XHProf only for matching pattern request
 
 It's possible to configure `exclude_patterns` parameter in configuration. XHProf would be enabled only for requests which will match these patterns.
 
     jns_xhprof:
         exclude_patterns: ['/css/', '/js/']
 
-### Using XHProf with disabled Symfony Profiler
+#### Using XHProf with disabled Symfony Profiler
 
 The most common case is the `prod` mode. Symfony Profiler is disabled by default in this mode.
 It is possible to configure XHProf Bundle to send custom Response header with XHProf web UI URL for the current token.
 Header name could be configured with `response_header` parameter in bundle configuration.
 Empty value disables this header completely. Default header name is `X-Xhprof-Url`.
+
+### Console command profiling
+
+#### Enabling console command profiling
+
+You can set the profiling of console commands to `on`, `off` or `option`.
+
+* `on`: all commands are profiled according to `sample_size`;
+* `off`: no commands are profiled (but web requests might be profiled);
+* `option`: commands get an additional option to trigger profiling.
+
+    jns_xhprof:
+        command: "off"
+
+#### Enabling XHProf with a specific option only
+
+When you set `command` to `option`, you can specify an option name that will
+trigger a profiler run on a command. That option will automatically be available
+on all commands.
+
+    jns_xhprof:
+        command: "option"
+        command_option_name: xhprof
+
+Now you can profile a command with
+
+    app/console acme:my:command --xhprof
+
+#### Excluding some commands from profiling
+
+When using the `on` setting, you might want to filter what commands get profiled.
+If the name filter matches, the profiler will never trigger.
+
+    jns_xhprof:
+        command_exclude_patterns: ['acme:', ':debug']
+
 
 [1]: http://mirror.facebook.net/facebook/xhprof/doc.html
 [2]: http://www.macports.org/

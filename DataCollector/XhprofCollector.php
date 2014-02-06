@@ -23,13 +23,13 @@ class XhprofCollector extends DataCollector
     protected $logger;
     protected $runId;
     protected $doctrine;
-    protected $profiling = false;
+    protected $collecting = false;
 
     public function __construct(ContainerInterface $container, $logger = null, DoctrineRegistry $doctrine = null)
     {
         $this->container = $container;
 
-        if (!$logger instanceof HttpKernelLoggerInterface && !$logger instanceof PsrLoggerInterface) {
+        if ($logger !== null && !$logger instanceof HttpKernelLoggerInterface && !$logger instanceof PsrLoggerInterface) {
             throw new \InvalidArgumentException('Logger must be an instance of Symfony\Component\HttpKernel\Log\LoggerInterface or Psr\Log\LoggerInterface');
         }
 
@@ -39,47 +39,26 @@ class XhprofCollector extends DataCollector
 
     /**
      * {@inheritdoc}
+     *
+     * Prepare data for the debug toolbar.
      */
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
         if (!$this->runId) {
-            $this->stopProfiling($response);
+            $this->stopProfiling($request->getHost(), $request->getUri());
         }
     }
 
-    public function startProfiling(Request $request)
+    /**
+     * Start profiling with probability according to sample size.
+     */
+    public function startProfiling()
     {
-        if (PHP_SAPI == 'cli') {
-            $_SERVER['REMOTE_ADDR'] = null;
-            $_SERVER['REQUEST_URI'] = $request->getScriptName();
-        } else {
-            $requestQueryArgument = $this->container->getParameter('jns_xhprof.request_query_argument');
-            if ($requestQueryArgument && is_null($request->query->get($requestQueryArgument))) {
-                $this->profiling = false;
-                return;
-            }
-        }
-
-        if (false !== strpos($request->getRequestUri(), "_wdt") || false !== strpos($request->getRequestUri(), "_profiler")) {
-            $this->profiling = false;
-            return;
-        }
-
-        if ($excludePatterns = $this->container->getParameter('jns_xhprof.exclude_patterns')) {
-            foreach ($excludePatterns as $exclude) {
-                if (preg_match('@' . $exclude . '@', $request->getRequestUri())) {
-                    $this->profiling = false;
-                    return;
-                }
-            }
-        }
-
         if (mt_rand(1, $this->container->getParameter('jns_xhprof.sample_size')) != 1) {
-            $this->profiling = false;
             return;
         }
 
-        $this->profiling = true;
+        $this->collecting = true;
         xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
 
         if ($this->logger) {
@@ -87,13 +66,21 @@ class XhprofCollector extends DataCollector
         }
     }
 
-    public function stopProfiling(Response $response)
+    /**
+     * Stop profiling if we where profiling.
+     *
+     * @param string $serverName The server name the request is running on, or cli for command line.
+     * @param string $uri        The requested uri / command name.
+     *
+     * @return bool
+     */
+    public function stopProfiling($serverName, $uri)
     {
-        if (!$this->profiling) {
-            return;
+        if (!$this->collecting) {
+            return false;
         }
 
-        $this->profiling = false;
+        $this->collecting = false;
 
         $enableXhgui = $this->container->getParameter('jns_xhprof.enable_xhgui');
 
@@ -106,7 +93,7 @@ class XhprofCollector extends DataCollector
         $xhprof_runs = new \XHProfRuns_Default();
 
         if ($enableXhgui) {
-            $this->runId = $this->saveProfilingDataToDB($xhprof_data);
+            $this->runId = $this->saveProfilingDataToDB($xhprof_data, $serverName, $uri);
         } else {
             $this->runId = $xhprof_runs->save_run($xhprof_data, "Symfony");
         }
@@ -116,10 +103,8 @@ class XhprofCollector extends DataCollector
             'xhprof' => $this->runId,
             'xhprof_url' => $this->container->getParameter('jns_xhprof.location_web'),
         );
-        $headerName = $this->container->getParameter('jns_xhprof.response_header');
-        if ($headerName) {
-            $response->headers->set($headerName, $this->data['xhprof']);
-        }
+
+        return $this->data['xhprof'];
     }
 
     /**
@@ -129,11 +114,8 @@ class XhprofCollector extends DataCollector
      * @throws \Exception if doctrine was not injected correctly
      * @return string   Returns the run id for the saved XHProf run
      */
-    private function saveProfilingDataToDB($xhprof_data)
+    private function saveProfilingDataToDB($xhprof_data, $uri, $serverName)
     {
-        $url   = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF'];
-        $sname = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
-
         $pmu = isset($xhprof_data['main()']['pmu']) ? $xhprof_data['main()']['pmu'] : '';
         $wt  = isset($xhprof_data['main()']['wt'])  ? $xhprof_data['main()']['wt']  : '';
         $cpu = isset($xhprof_data['main()']['cpu']) ? $xhprof_data['main()']['cpu'] : '';
@@ -148,9 +130,9 @@ class XhprofCollector extends DataCollector
         $xhprofDetail = new XhprofDetail();
         $xhprofDetail
             ->setId($runId)
-            ->setUrl($url)
-            ->setCanonicalUrl($this->getCanonicalUrl($url))
-            ->setServerName($sname)
+            ->setUrl($uri)
+            ->setCanonicalUrl($this->getCanonicalUrl($uri))
+            ->setServerName($serverName)
             ->setPerfData(gzcompress(serialize(($xhprof_data))))
             ->setCookie(serialize($_COOKIE))
             ->setPost(serialize($_POST))
@@ -216,13 +198,12 @@ class XhprofCollector extends DataCollector
     }
 
     /**
-     * Gets the XHProf url.
+     * Check whether this request was profiled. Used for the debug toolbar.
      *
-     * @return integer The XHProf url
+     * @return boolean
      */
     public function isProfiling()
     {
         return $this->data['xhprof']  ? true : false;
     }
 }
-
