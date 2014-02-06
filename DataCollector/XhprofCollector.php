@@ -51,11 +51,13 @@ class XhprofCollector extends DataCollector
 
     /**
      * Start profiling with probability according to sample size.
+     *
+     * @return boolean whether profiling was started or not.
      */
     public function startProfiling()
     {
         if (mt_rand(1, $this->container->getParameter('jns_xhprof.sample_size')) != 1) {
-            return;
+            return false;
         }
 
         $this->collecting = true;
@@ -64,6 +66,8 @@ class XhprofCollector extends DataCollector
         if ($this->logger) {
             $this->logger->debug('Enabled XHProf');
         }
+
+        return true;
     }
 
     /**

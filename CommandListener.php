@@ -108,7 +108,19 @@ class CommandListener
     public function onCommand(ConsoleCommandEvent $event)
     {
         $command = $event->getCommand()->getName();
-        if ('list' == $command || 'help' == $command) {
+        $system = array(
+            'list',
+            'help',
+            'assetic:dump',
+            'assets:install',
+            'config:dump-reference',
+            'container:debug',
+            'router:debug',
+            'cache:clear',
+            'cache:warmup',
+            'cache:create-cache-class',
+        );
+        if (in_array($command, $system)) {
             return;
         }
         if ('off' == $this->mode ||
@@ -122,7 +134,10 @@ class CommandListener
             }
         }
 
-        $this->collector->startProfiling();
+
+        if ($this->collector->startProfiling()) {
+            $event->getOutput()->writeln("XHProf starting run\n---");
+        }
     }
 
     /**
@@ -141,7 +156,7 @@ class CommandListener
 
 
         $event->getOutput()->writeln(sprintf(
-            "\n\n---\nXHProf run link <info>%s</info>",
+            "\n---\nXHProf run link <info>%s</info>",
             $this->collector->getXhprofUrl()
         ));
     }
