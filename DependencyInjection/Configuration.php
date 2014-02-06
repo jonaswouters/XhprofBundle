@@ -34,7 +34,7 @@ class Configuration
                 ->scalarNode('sample_size')->defaultValue(1)->end()
                 ->scalarNode('enabled')->defaultFalse()->end()
                 ->scalarNode('request_query_argument')->defaultFalse()->end()
-                ->scalarNode('response_header')->defaultValue('X-Xhprof-Run-Id')->end()
+                ->scalarNode('response_header')->defaultValue('X-Xhprof-Url')->end()
                 ->enumNode('command')
                     ->values(array('on', 'option', 'off'))
                     ->defaultValue('option')

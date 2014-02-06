@@ -89,7 +89,7 @@ class RequestListener
 
         $headerName = $this->container->getParameter('jns_xhprof.response_header');
         if ($headerName) {
-            $event->getResponse()->headers->set($headerName, $link);
+            $event->getResponse()->headers->set($headerName, $this->collector->getXhprofUrl());
         }
     }
 }
