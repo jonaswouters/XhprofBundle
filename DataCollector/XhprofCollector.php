@@ -131,7 +131,9 @@ class XhprofCollector extends DataCollector
         $runId = uniqid();
 
         $em = $this->doctrine->getManager($this->container->getParameter('jns_xhprof.entity_manager'));
-        $xhprofDetail = new XhprofDetail();
+        $entityClass  = $this->container->getParameter('jns_xhprof.entity_class');
+
+        $xhprofDetail = new $entityClass();
         $xhprofDetail
             ->setId($runId)
             ->setUrl($uri)
@@ -146,6 +148,7 @@ class XhprofCollector extends DataCollector
             ->setCpu($cpu)
             ->setServerId(getenv('SERVER_NAME'))
             ->setAggregateCallsInclude('')
+            ->setTimestamp(new \DateTime())
             ;
 
         $em->persist($xhprofDetail);

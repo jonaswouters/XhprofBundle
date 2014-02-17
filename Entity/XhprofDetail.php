@@ -2,95 +2,39 @@
 
 namespace Jns\Bundle\XhprofBundle\Entity;
 
-
 use Doctrine\ORM\Mapping as ORM;
 
-
-/**
- * @ORM\Table(name="details")
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- */
 class XhprofDetail
 {
-    /**
-     * @var integer $id
-     *
-     * @ORM\Column(name="id", type="string", unique=true, length=17, nullable=false)
-     * @ORM\Id
-     */
     protected $id;
 
-    /**
-     * @ORM\Column(name="url", type="string", length=255, nullable=true)
-     */
     protected $url;
 
-    /**
-     * @ORM\Column(name="c_url", type="string", length=255, nullable=true)
-     */
     protected $canonicalUrl;
 
-    /**
-     * @ORM\Column(name="`server name`", type="string", length=64, nullable=true)
-     */
     protected $serverName;
 
-    /**
-     * @ORM\Column(name="type", type="integer", length=4, nullable=true)
-     */
     protected $type;
 
-    /**
-     * @ORM\Column(name="perfdata", type="blob", nullable=false)
-     */
     protected $perfData;
 
-    /**
-     * @ORM\Column(name="cookie", type="blob", nullable=false)
-     */
     protected $cookie;
 
-    /**
-     * @ORM\Column(name="post", type="blob", nullable=false)
-     */
     protected $post;
 
-    /**
-     * @ORM\Column(name="`get`", type="blob", nullable=false)
-     */
     protected $get;
 
-    /**
-     * @ORM\Column(name="pmu", type="integer", length=11, nullable=true)
-     */
     protected $pmu;
 
-    /**
-     * @ORM\Column(name="wt", type="integer", length=11, nullable=true)
-     */
     protected $wt;
 
-    /**
-     * @ORM\Column(name="cpu", type="integer", length=11, nullable=true)
-     */
     protected $cpu;
 
-    /**
-     * @ORM\Column(name="server_id", type="string", length=3, nullable=false)
-     */
     protected $serverId;
 
-    /**
-     * @ORM\Column(name="aggregateCalls_include", type="string", length=255, nullable=true)
-     */
     protected $aggregateCallsInclude;
 
-    /**
-     * @ORM\Column(name="timestamp", type="datetime", length=3, nullable=false)
-     */
     protected $timestamp;
-
 
     /**
      * Get id.
