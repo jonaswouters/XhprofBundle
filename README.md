@@ -96,7 +96,32 @@ Do not forget to set `enabled` to `true`, or the profiler will never be activate
 
     jns_xhprof:
         entity_manager:  <name_of_entity_manager> (defaults to default)
+        entity_class:    Acme\FooBundle\Entity\XhprofDetails
         enable_xhgui:    true
+
+Create your class `Acme\FooBundle\Entity\XhprofDetails`:
+
+    <?php
+
+    namespace Acme\FooBundle\Entity;
+
+    use Jns\Bundle\XhprofBundle\Entity\XhprofDetail as BaseXhprofDetail;
+    use Doctrine\ORM\Mapping as ORM;
+
+    /**
+     * @ORM\Entity
+     * @ORM\Table(name="details")
+     */
+    class XhprofDetail extends BaseXhprofDetail
+    {
+        /**
+         * @var integer $id
+         *
+         * @ORM\Column(name="id", type="string", unique=true, length=17, nullable=false)
+         * @ORM\Id
+         */
+        protected $id;
+    }
 
 If you only have one entity manager defined, you don't need to set it here. This setting is for the case where you are using a seperate profiling database for XHGui (highly recommended).
 

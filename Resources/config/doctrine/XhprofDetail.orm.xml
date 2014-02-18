@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <mapped-superclass name="Jns\Bundle\XhprofBundle\Entity\XhprofDetail" table="details">
+
+        <field name="url" type="string" length="255" nullable="true" />
+
+        <field name="canonicalUrl" column="c_url" type="string" length="255" nullable="true" />
+
+        <field name="serverName" column="`server name`" type="string" length="255" nullable="true" />
+
+        <field name="type" type="integer" length="4" nullable="true" />
+
+        <field name="perfData" column="perfdata" type="blob" nullable="false" />
+
+        <field name="cookie" type="blob" nullable="false" />
+
+        <field name="post" type="blob" nullable="false" />
+
+        <field name="get" column="`get`" type="blob" nullable="false" />
+
+        <field name="pmu" type="integer" length="11" nullable="true" />
+
+        <field name="wt" type="integer" length="11" nullable="true" />
+
+        <field name="cpu" type="integer" length="11" nullable="true" />
+
+        <field name="serverId" column="server_id" type="string" length="255" nullable="false" />
+
+        <field name="aggregateCallsInclude" column="aggregateCalls_include" type="string" length="255" nullable="true" />
+
+        <field name="timestamp" type="datetime" length="3" nullable="false" />
+
+    </mapped-superclass>
+
+</doctrine-mapping>

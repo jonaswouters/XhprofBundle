@@ -26,11 +26,18 @@ class Configuration
         $rootNode = $treeBuilder->root('jns_xhprof');
 
         $rootNode
+            ->validate()
+                ->ifTrue(function($v) {
+                    return $v['enable_xhgui'] && null === $v['entity_class'];
+                })
+                ->thenInvalid('If you activate xhgui, you have to define an entity_class.')
+            ->end()
             ->children()
                 ->scalarNode('location_web')->defaultValue('http://xhprof')->end()
                 ->scalarNode('entity_manager')->defaultValue('default')->end()
-                ->arrayNode('exclude_patterns')->prototype('scalar')->end()->end()
+                ->scalarNode('entity_class')->defaultValue(null)->end()
                 ->scalarNode('enable_xhgui')->defaultFalse()->end()
+                ->arrayNode('exclude_patterns')->prototype('scalar')->end()->end()
                 ->scalarNode('sample_size')->defaultValue(1)->end()
                 ->scalarNode('enabled')->defaultFalse()->end()
                 ->scalarNode('request_query_argument')->defaultFalse()->end()
