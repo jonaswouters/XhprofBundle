@@ -86,7 +86,7 @@ class XhprofCollector extends DataCollector
 
         $this->collecting = false;
 
-        $enableXhgui = $this->container->getParameter('jns_xhprof.enable_xhgui');
+        $enableXhprofio = $this->container->getParameter('jns_xhprof.enable_xhprofio');
 
         $xhprof_data = xhprof_disable();
 
@@ -96,7 +96,7 @@ class XhprofCollector extends DataCollector
 
         $xhprof_runs = new \XHProfRuns_Default();
 
-        if ($enableXhgui) {
+        if ($enableXhprofio) {
             $this->runId = $this->saveProfilingDataToDB($xhprof_data, $serverName, $uri);
         } else {
             $this->runId = $xhprof_runs->save_run($xhprof_data, "Symfony");

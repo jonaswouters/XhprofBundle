@@ -90,14 +90,14 @@ defining the following settings in your config. The config is usually located at
 
 Do not forget to set `enabled` to `true`, or the profiler will never be activated.
 
-### Using XHGui
+### Using XHProf.io
 
-[XHGui][3] is a GUI for the XHProf PHP extension, using a database backend, and pretty graphs to make it easy to use and interpret. The XHProf bundle supports using XHGui to display the results. To use, install XHGui, and add the following two settings to the configuration, usually located at `app/config/config.yml`:
+[XHProf.io][3] is a GUI for the XHProf PHP extension, using a database backend, and pretty graphs to make it easy to use and interpret. The XHProf bundle supports using XHProf.io to display the results. To use, install XHProf.io, and add the following two settings to the configuration, usually located at `app/config/config.yml`:
 
     jns_xhprof:
         entity_manager:  <name_of_entity_manager> (defaults to default)
         entity_class:    Acme\FooBundle\Entity\XhprofDetails
-        enable_xhgui:    true
+        enable_xhprofio:    true
 
 Create your class `Acme\FooBundle\Entity\XhprofDetails`:
 
@@ -123,7 +123,7 @@ Create your class `Acme\FooBundle\Entity\XhprofDetails`:
         protected $id;
     }
 
-If you only have one entity manager defined, you don't need to set it here. This setting is for the case where you are using a seperate profiling database for XHGui (highly recommended).
+If you only have one entity manager defined, you don't need to set it here. This setting is for the case where you are using a seperate profiling database for XHProf.io (highly recommended).
 
 ### Specifying a Sample Size
 
