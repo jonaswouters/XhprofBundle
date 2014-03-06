@@ -9,7 +9,7 @@ A function's profile can be broken down by callers or callees. The raw data coll
 XHProf has a simple HTML based user interface (written in PHP). The browser based UI for viewing profiler results makes it easy to view results or to share results with peers.
 A callgraph image view is also supported.
 
-See [official documentation][1]
+See [official documentation](http://mirror.facebook.net/facebook/xhprof/doc.html)
 
 What does this Symfony 2 Bundle do?
 -----------------------------------
@@ -20,7 +20,7 @@ With Symfony 2.3 and newer, it can also profile console commands.
 ## Installation
 
 Make sure you have XHProf installed.
-If you are on a mac you can easily install it via [Macports][2]
+If you are on a mac you can easily install it via [Macports](http://www.macports.org/)
     sudo port install php5-xhprof
 
 1. ### Composer
@@ -90,12 +90,17 @@ defining the following settings in your config. The config is usually located at
 
 Do not forget to set `enabled` to `true`, or the profiler will never be activated.
 
-### Using XHProf.io
-
-[XHProf.io][3] is a GUI for the XHProf PHP extension, using a database backend, and pretty graphs to make it easy to use and interpret. The XHProf bundle supports using XHProf.io to display the results. To use, install XHProf.io, and add the following two settings to the configuration, usually located at `app/config/config.yml`:
+### [XHGui](https://github.com/perftools/xhgui)
 
     jns_xhprof:
-        xhprofio
+        xhgui:
+            enabled: true
+            connection: DSN for a running Mongo instance (defaults to mongodb://localhost)
+
+### [XHProf.io](https://github.com/preinheimer/xhprof)
+
+    jns_xhprof:
+        xhprofio:
             enabled: true
             manager: <name_of_entity_manager> (defaults to default)
             class:   Acme\FooBundle\Entity\XhprofDetails
@@ -199,8 +204,3 @@ If the name filter matches, the profiler will never trigger.
 
     jns_xhprof:
         command_exclude_patterns: ['acme:', ':debug']
-
-
-[1]: http://mirror.facebook.net/facebook/xhprof/doc.html
-[2]: http://www.macports.org/
-[3]: https://github.com/preinheimer/xhprof
