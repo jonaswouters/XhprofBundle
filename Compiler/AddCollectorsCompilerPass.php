@@ -16,8 +16,10 @@ class AddCollectorsCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        // Only valid when there's a profiler definition
-        if (! $container->hasDefinition('profiler')) {
+        $config = array_filter($container->getExtensionConfig('jns_xhprof'));
+
+        // Only valid when there's a profiler definition and config present
+        if (! $container->hasDefinition('profiler') || empty($config)) {
             return;
         }
 
