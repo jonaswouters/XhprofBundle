@@ -28,15 +28,20 @@ class Configuration
         $rootNode
             ->validate()
                 ->ifTrue(function($v) {
-                    return $v['enable_xhprofio'] && null === $v['entity_class'];
+                    $v = array_merge(array('xhprofio' => array('enabled' => null, 'class' => null)), $v);
+                    return $v['xhprofio']['enabled'] && null === $v['xhprofio']['class'];
                 })
-                ->thenInvalid('If you activate xhprofio, you have to define an entity_class.')
+                ->thenInvalid('If you enable xhprofio, you must define class.')
             ->end()
             ->children()
                 ->scalarNode('location_web')->defaultValue('http://xhprof')->end()
-                ->scalarNode('entity_manager')->defaultValue('default')->end()
-                ->scalarNode('entity_class')->defaultValue(null)->end()
-                ->scalarNode('enable_xhprofio')->defaultFalse()->end()
+                ->arrayNode('xhprofio')
+                    ->children()
+                        ->scalarNode('enabled')->defaultFalse()->end()
+                        ->scalarNode('manager')->defaultValue('default')->end()
+                        ->scalarNode('class')->defaultNull()->end()
+                    ->end()
+                ->end()
                 ->arrayNode('exclude_patterns')->prototype('scalar')->end()->end()
                 ->scalarNode('sample_size')->defaultValue(1)->end()
                 ->scalarNode('enabled')->defaultFalse()->end()

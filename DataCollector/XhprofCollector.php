@@ -86,7 +86,7 @@ class XhprofCollector extends DataCollector
 
         $this->collecting = false;
 
-        $enableXhprofio = $this->container->getParameter('jns_xhprof.enable_xhprofio');
+        $enableXhprofio = $this->container->getParameter('jns_xhprof.xhprofio.enabled');
 
         $xhprof_data = xhprof_disable();
 
@@ -130,8 +130,8 @@ class XhprofCollector extends DataCollector
 
         $runId = uniqid();
 
-        $em = $this->doctrine->getManager($this->container->getParameter('jns_xhprof.entity_manager'));
-        $entityClass  = $this->container->getParameter('jns_xhprof.entity_class');
+        $em = $this->doctrine->getManager($this->container->getParameter('jns_xhprof.xhprofio.manager'));
+        $entityClass  = $this->container->getParameter('jns_xhprof.xhprofio.class');
 
         $xhprofDetail = new $entityClass();
         $xhprofDetail

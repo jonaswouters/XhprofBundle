@@ -95,9 +95,10 @@ Do not forget to set `enabled` to `true`, or the profiler will never be activate
 [XHProf.io][3] is a GUI for the XHProf PHP extension, using a database backend, and pretty graphs to make it easy to use and interpret. The XHProf bundle supports using XHProf.io to display the results. To use, install XHProf.io, and add the following two settings to the configuration, usually located at `app/config/config.yml`:
 
     jns_xhprof:
-        entity_manager:  <name_of_entity_manager> (defaults to default)
-        entity_class:    Acme\FooBundle\Entity\XhprofDetails
-        enable_xhprofio:    true
+        xhprofio
+            enabled: true
+            manager: <name_of_entity_manager> (defaults to default)
+            class:   Acme\FooBundle\Entity\XhprofDetails
 
 Create your class `Acme\FooBundle\Entity\XhprofDetails`:
 
