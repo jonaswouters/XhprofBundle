@@ -145,8 +145,7 @@ class CommandListener
     public function onTerminate(ConsoleTerminateEvent $event)
     {
         $command = $event->getCommand();
-        $link = $this->collector->stopProfiling('cli', $command->getName());
-        if (false === $link) {
+        if (! $link = $this->collector->stopProfiling('cli', $command->getName())) {
             return;
         }
 

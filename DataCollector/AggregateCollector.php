@@ -22,9 +22,12 @@ class AggregateCollector
 
     public function stopProfiling($serverName, $uri, Request $request = null)
     {
+        $collected = 0;
         foreach ($this->collectors as $collector) {
-            $collector->stopProfiling($serverName, $uri, $request);
+            $collected += (int) $collector->stopProfiling($serverName, $uri, $request);
         }
+
+        return $collected;
     }
 
     public function getUrl()
