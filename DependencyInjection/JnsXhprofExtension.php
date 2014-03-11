@@ -26,11 +26,16 @@ class JnsXhprofExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        // Disable when XHProf is not available
+        if (! function_exists('xhprof_enable')) {
+            $configs[] = array('enabled' => false);
+        }
+
         $processor = new Processor();
         $configuration = new Configuration();
         $config = $processor->process($configuration->getConfigTree(), $configs);
 
-        if ($config['enabled'] && function_exists('xhprof_enable')) {
+        if ($config['enabled']) {
             $this->loadDefaults($container);
 
             $container->setParameter($this->getAlias().'.enabled', $config['enabled']);

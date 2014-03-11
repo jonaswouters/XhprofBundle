@@ -23,6 +23,10 @@ class AddCollectorsCompilerPass implements CompilerPassInterface
             return;
         }
 
+        if (! $container->hasDefinition('xhprof.aggregate_collector')) {
+            return;
+        }
+
         $aggregate = $container->getDefinition('xhprof.aggregate_collector');
 
         $collectors = $container->findTaggedServiceIds('xhprof_data_collector');
