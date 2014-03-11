@@ -4,7 +4,6 @@ namespace Jns\Bundle\XhprofBundle;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
@@ -21,7 +20,7 @@ class RequestListener
     protected $collector;
     private $container;
 
-    public function __construct(DataCollector\XhprofCollector $collector, ContainerInterface $container)
+    public function __construct(DataCollector\AggregateCollector $collector, ContainerInterface $container)
     {
         $this->collector = $collector;
         $this->container = $container;
@@ -89,7 +88,7 @@ class RequestListener
 
         $headerName = $this->container->getParameter('jns_xhprof.response_header');
         if ($headerName) {
-            $event->getResponse()->headers->set($headerName, $this->collector->getXhprofUrl());
+            $event->getResponse()->headers->set($headerName, $this->collector->getUrl());
         }
     }
 }

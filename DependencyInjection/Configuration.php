@@ -27,16 +27,36 @@ class Configuration
 
         $rootNode
             ->validate()
-                ->ifTrue(function($v) {
-                    return $v['enable_xhgui'] && null === $v['entity_class'];
+                ->ifTrue(function ($v) {
+                    $v = array_merge(array('xhprofio' => array('enabled' => null, 'class' => null)), $v);
+
+                    return $v['xhprofio']['enabled'] && null === $v['xhprofio']['class'];
                 })
-                ->thenInvalid('If you activate xhgui, you have to define an entity_class.')
+                ->thenInvalid('If you enable xhprofio, you must define class.')
             ->end()
             ->children()
                 ->scalarNode('location_web')->defaultValue('http://xhprof')->end()
-                ->scalarNode('entity_manager')->defaultValue('default')->end()
-                ->scalarNode('entity_class')->defaultValue(null)->end()
-                ->scalarNode('enable_xhgui')->defaultFalse()->end()
+                ->arrayNode('xhprof')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('enabled')->defaultFalse()->end()
+                    ->end()
+                ->end()
+                ->arrayNode('xhprofio')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('enabled')->defaultFalse()->end()
+                        ->scalarNode('manager')->defaultValue('default')->end()
+                        ->scalarNode('class')->defaultNull()->end()
+                    ->end()
+                ->end()
+                ->arrayNode('xhgui')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('enabled')->defaultFalse()->end()
+                        ->scalarNode('connection')->defaultValue('mongodb://localhost')->end()
+                    ->end()
+                ->end()
                 ->arrayNode('exclude_patterns')->prototype('scalar')->end()->end()
                 ->scalarNode('sample_size')->defaultValue(1)->end()
                 ->scalarNode('enabled')->defaultFalse()->end()
@@ -54,8 +74,8 @@ class Configuration
                 ->arrayNode('command_exclude_patterns')
                     ->prototype('scalar')->end()
                     ->beforeNormalization()
-                        ->ifTrue(function($v) { return $v === null; })
-                        ->then(function($v) { return array(); })
+                        ->ifTrue(function ($v) { return $v === null; })
+                        ->then(function ($v) { return array(); })
                     ->end()
                     ->info('List of regular expressions to match commands that are not profiled.')
                 ->end()

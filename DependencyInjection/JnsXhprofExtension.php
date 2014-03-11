@@ -21,21 +21,38 @@ class JnsXhprofExtension extends Extension
     /**
      * Loads the services based on your application configuration.
      *
-     * @param array $configs
+     * @param array            $configs
      * @param ContainerBuilder $container
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        // Disable when XHProf is not available
+        if (! function_exists('xhprof_enable')) {
+            $configs[] = array('enabled' => false);
+        }
+
         $processor = new Processor();
         $configuration = new Configuration();
         $config = $processor->process($configuration->getConfigTree(), $configs);
 
-        if ($config['enabled'] && function_exists('xhprof_enable')) {
+        if ($config['enabled']) {
             $this->loadDefaults($container);
 
-            foreach ($config as $key => $value) {
-                $container->setParameter($this->getAlias().'.'.$key, $value);
-            }
+            $container->setParameter($this->getAlias().'.enabled', $config['enabled']);
+            $container->setParameter($this->getAlias().'.command', $config['command']);
+            $container->setParameter($this->getAlias().'.xhprof.enabled', $config['xhprof']['enabled']);
+            $container->setParameter($this->getAlias().'.xhprofio.enabled', $config['xhprofio']['enabled']);
+            $container->setParameter($this->getAlias().'.xhprofio.manager', $config['xhprofio']['manager']);
+            $container->setParameter($this->getAlias().'.xhprofio.class', $config['xhprofio']['class']);
+            $container->setParameter($this->getAlias().'.xhgui.enabled', $config['xhgui']['enabled']);
+            $container->setParameter($this->getAlias().'.xhgui.connection', $config['xhgui']['connection']);
+            $container->setParameter($this->getAlias().'.location_web', $config['location_web']);
+            $container->setParameter($this->getAlias().'.exclude_patterns', $config['exclude_patterns']);
+            $container->setParameter($this->getAlias().'.sample_size', $config['sample_size']);
+            $container->setParameter($this->getAlias().'.request_query_argument', $config['request_query_argument']);
+            $container->setParameter($this->getAlias().'.response_header', $config['response_header']);
+            $container->setParameter($this->getAlias().'.command_option_name', $config['command_option_name']);
+            $container->setParameter($this->getAlias().'.command_exclude_patterns', $config['command_exclude_patterns']);
         }
     }
 
@@ -47,7 +64,9 @@ class JnsXhprofExtension extends Extension
     /**
      * Get File Loader
      *
-     * @param ContainerBuilder $container
+     * @param $container
+     *
+     * @return XmlFileLoader
      */
     public function getFileLoader($container)
     {

@@ -15,7 +15,7 @@
     {% endif %}
     {% set icon %}
         {% if collector.profiling %}
-            <a href="{{ collector.xhprofurl }}">{{ icon }}</a>
+            <a href="{{ collector.url }}">{{ icon }}</a>
         {% else %}
             <span>{{ icon }}</span>
         {% endif %}
@@ -25,4 +25,3 @@
         <div class="sf-toolbar-info">{{ text|default('') }}</div>
     </div>
 {% endblock %}
-

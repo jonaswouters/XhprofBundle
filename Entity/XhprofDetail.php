@@ -54,6 +54,7 @@ class XhprofDetail
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -75,6 +76,7 @@ class XhprofDetail
     public function setUrl($url)
     {
         $this->url = $url;
+
         return $this;
     }
 
@@ -96,6 +98,7 @@ class XhprofDetail
     public function setCanonicalUrl($canonicalUrl)
     {
         $this->canonicalUrl = $canonicalUrl;
+
         return $this;
     }
 
@@ -117,6 +120,7 @@ class XhprofDetail
     public function setServerName($serverName)
     {
         $this->serverName = $serverName;
+
         return $this;
     }
 
@@ -138,6 +142,7 @@ class XhprofDetail
     public function setPerfData($perfData)
     {
         $this->perfData = $perfData;
+
         return $this;
     }
 
@@ -159,6 +164,7 @@ class XhprofDetail
     public function setCookie($cookie)
     {
         $this->cookie = $cookie;
+
         return $this;
     }
 
@@ -180,6 +186,7 @@ class XhprofDetail
     public function setPost($post)
     {
         $this->post = $post;
+
         return $this;
     }
 
@@ -201,6 +208,7 @@ class XhprofDetail
     public function setGet($get)
     {
         $this->get = $get;
+
         return $this;
     }
 
@@ -222,6 +230,7 @@ class XhprofDetail
     public function setPmu($pmu)
     {
         $this->pmu = $pmu;
+
         return $this;
     }
 
@@ -243,6 +252,7 @@ class XhprofDetail
     public function setWt($wt)
     {
         $this->wt = $wt;
+
         return $this;
     }
 
@@ -264,6 +274,7 @@ class XhprofDetail
     public function setCpu($cpu)
     {
         $this->cpu = $cpu;
+
         return $this;
     }
 
@@ -285,6 +296,7 @@ class XhprofDetail
     public function setServerId($serverId)
     {
         $this->serverId = $serverId;
+
         return $this;
     }
 
@@ -306,6 +318,7 @@ class XhprofDetail
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -360,6 +373,7 @@ class XhprofDetail
     public function setAggregateCallsInclude($aggregateCallsInclude)
     {
         $this->aggregateCallsInclude = $aggregateCallsInclude;
+
         return $this;
     }
 }

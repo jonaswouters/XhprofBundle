@@ -2,14 +2,12 @@
 
 namespace Jns\Bundle\XhprofBundle;
 
+use Jns\Bundle\XhprofBundle\DataCollector\AggregateCollector;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputOption;
-
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
-use Jns\Bundle\XhprofBundle\DataCollector\XhprofCollector;
 
 /**
  * A command listener to profile command runs.
@@ -28,7 +26,7 @@ class CommandListener
     private $filters = array();
     private $webLocation;
 
-    public function __construct(XhprofCollector $collector, ContainerInterface $container)
+    public function __construct(AggregateCollector $collector, ContainerInterface $container)
     {
         $this->collector = $collector;
         $this->container = $container;
@@ -75,7 +73,7 @@ class CommandListener
      * Inspired by
      * http://php-and-symfony.matthiasnoback.nl/2013/11/symfony2-add-a-global-option-to-console-commands-and-generate-pid-file/
      *
-     * @param ConsoleCommandEvent $event
+     * @param  ConsoleCommandEvent $event
      * @return mixed
      */
     private function isProfileOption(ConsoleCommandEvent $event)
@@ -120,11 +118,12 @@ class CommandListener
             'cache:warmup',
             'cache:create-cache-class',
         );
+
         if (in_array($command, $system)) {
             return;
         }
-        if ('off' == $this->mode ||
-            'option' == $this->mode && !$this->isProfileOption($event)) {
+
+        if ('off' == $this->mode || 'option' == $this->mode && !$this->isProfileOption($event)) {
             return;
         }
 
@@ -134,10 +133,7 @@ class CommandListener
             }
         }
 
-
-        if ($this->collector->startProfiling()) {
-            $event->getOutput()->writeln("XHProf starting run\n---");
-        }
+        $this->collector->startProfiling();
     }
 
     /**
@@ -149,15 +145,13 @@ class CommandListener
     public function onTerminate(ConsoleTerminateEvent $event)
     {
         $command = $event->getCommand();
-        $link = $this->collector->stopProfiling('cli', $command->getName());
-        if (false === $link) {
+        if (! $link = $this->collector->stopProfiling('cli', $command->getName())) {
             return;
         }
 
-
         $event->getOutput()->writeln(sprintf(
-            "\n---\nXHProf run link <info>%s</info>",
-            $this->collector->getXhprofUrl()
+            "\n---\nXHProf run: <info>%s</info>",
+            $this->collector->getUrl()
         ));
     }
 }
