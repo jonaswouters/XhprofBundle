@@ -96,10 +96,10 @@ Do not forget to set `enabled` to `true`, or the profiler will never be activate
 
     jns_xhprof:
         entity_manager:  <name_of_entity_manager> (defaults to default)
-        entity_class:    Acme\FooBundle\Entity\XhprofDetails
+        entity_class:    Acme\FooBundle\Entity\XhprofDetail
         enable_xhgui:    true
 
-Create your class `Acme\FooBundle\Entity\XhprofDetails`:
+Create your class `Acme\FooBundle\Entity\XhprofDetail`:
 
     <?php
 
