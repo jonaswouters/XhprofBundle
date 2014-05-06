@@ -3,6 +3,7 @@
     "type": "symfony-bundle",
     "description": "Symfony JnsXhprofBundle",
     "keywords": ["xhprof"],
+    "license": "MIT",
     "homepage": "https://github.com/jonaswouters/XhprofBundle",
     "authors": [
         {
