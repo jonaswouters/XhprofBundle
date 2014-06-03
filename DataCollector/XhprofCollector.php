@@ -97,7 +97,7 @@ class XhprofCollector extends DataCollector
         $xhprof_runs = new \XHProfRuns_Default();
 
         if ($enableXhgui) {
-            $this->runId = $this->saveProfilingDataToDB($xhprof_data, $serverName, $uri);
+            $this->runId = $this->saveProfilingDataToDB($xhprof_data, $uri, $serverName);
         } else {
             $this->runId = $xhprof_runs->save_run($xhprof_data, "Symfony");
         }
