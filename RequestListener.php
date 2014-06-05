@@ -46,6 +46,8 @@ class RequestListener
         $requestQueryArgument = $this->container->getParameter('jns_xhprof.request_query_argument');
         if ($requestQueryArgument && is_null($request->query->get($requestQueryArgument))) {
             return;
+        } else {
+            $request->query->remove($requestQueryArgument);
         }
 
         $uri = $request->getRequestUri();
