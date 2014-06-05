@@ -96,19 +96,37 @@ class XhprofCollector extends DataCollector
 
         $xhprof_runs = new \XHProfRuns_Default();
 
+        $source = null;
+
         if ($enableXhgui) {
             $this->runId = $this->saveProfilingDataToDB($xhprof_data, $uri, $serverName);
         } else {
-            $this->runId = $xhprof_runs->save_run($xhprof_data, "Symfony");
+            $source = $this->sanitizeUriForSource($uri);
+
+            $this->runId = $xhprof_runs->save_run($xhprof_data, $source);
         }
 
 
         $this->data = array(
             'xhprof' => $this->runId,
+            'source' => $source,
             'xhprof_url' => $this->container->getParameter('jns_xhprof.location_web'),
         );
 
         return $this->data['xhprof'];
+    }
+
+    /**
+     * Sanitize an uri to use it as source
+     *
+     * @param  string $uri
+     * @return string
+     */
+    private function sanitizeUriForSource($uri)
+    {
+        $uri = preg_replace('/[\/]+/', '~', $uri);
+
+        return preg_replace('/[^\w~\-_]+/', '-', $uri);
     }
 
     /**
@@ -201,7 +219,7 @@ class XhprofCollector extends DataCollector
      */
     public function getXhprofUrl()
     {
-        return $this->data['xhprof_url'] . '?run=' . $this->data['xhprof'] . '&source=Symfony';
+        return $this->data['xhprof_url'] . '?run=' . $this->data['xhprof'] . '&source='.$this->data['source'];
     }
 
     /**
