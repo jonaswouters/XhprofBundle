@@ -1,3 +1,6 @@
 tools:
+    php_pdepend: true
+    php_cpd: true
+    php_analyzer: true
     external_code_coverage:
-        timeout: 600    # Timeout in seconds.
+        timeout: 720    # Timeout in seconds.
