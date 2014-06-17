@@ -1,7 +1,7 @@
 README
 ======
 
-[![Build Status](https://travis-ci.org/jonaswouters/XhprofBundle.svg?branch=master)](https://travis-ci.org/jonaswouters/XhprofBundle)
+[![Build Status](https://travis-ci.org/jonaswouters/XhprofBundle.svg?branch=master)](https://travis-ci.org/jonaswouters/XhprofBundle) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jonaswouters/XhprofBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jonaswouters/XhprofBundle/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/jonaswouters/XhprofBundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/jonaswouters/XhprofBundle/?branch=master)
 
 What is XHProf?
 ---------------
