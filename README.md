@@ -1,6 +1,8 @@
 README
 ======
 
+[![Build Status](https://magnum.travis-ci.com/jonaswouters/XhprofBundle.png)](https://magnum.travis-ci.com/#!/jonaswouters/XhprofBundle)
+
 What is XHProf?
 ---------------
 
