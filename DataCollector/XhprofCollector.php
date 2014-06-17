@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry as DoctrineRegistry;
-use Jns\Bundle\XhprofBundle\Entity\XhprofDetail;
 
 /**
  * XhprofDataCollector.
@@ -133,6 +132,8 @@ class XhprofCollector extends DataCollector
      * This function saves the profiling data as well as some additional data to a profiling database.
      *
      * @param  array $xhprof_data
+     * @param string $uri
+     * @param string $serverName
      * @throws \Exception if doctrine was not injected correctly
      * @return string   Returns the run id for the saved XHProf run
      */
@@ -215,7 +216,7 @@ class XhprofCollector extends DataCollector
     /**
      * Gets the XHProf url.
      *
-     * @return integer The XHProf url
+     * @return string The XHProf url
      */
     public function getXhprofUrl()
     {

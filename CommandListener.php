@@ -6,9 +6,7 @@ use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputOption;
-
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
 use Jns\Bundle\XhprofBundle\DataCollector\XhprofCollector;
 
 /**

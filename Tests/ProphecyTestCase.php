@@ -21,6 +21,9 @@ abstract class ProphecyTestCase extends \PHPUnit_Framework_TestCase
         $this->prophet->checkPredictions();
     }
 
+    /**
+     * @param string $className
+     */
     public function getProphecy($className)
     {
         return $this->prophet->prophesize($className);
