@@ -322,7 +322,7 @@ class XhprofDetail
     /**
      * Set timestamp.
      *
-     * @param timestamp the value to set.
+     * @param timestamp \DateTime value to set.
      */
     public function setTimestamp($timestamp)
     {

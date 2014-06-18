@@ -54,6 +54,9 @@ class JnsXhprofExtension extends Extension
         return new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
     }
 
+    /**
+     * @param ContainerBuilder $container
+     */
     protected function loadDefaults($container)
     {
         $loader = $this->getFileLoader($container);
