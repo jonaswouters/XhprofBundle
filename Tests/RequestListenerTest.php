@@ -179,6 +179,8 @@ class RequestListenerTest extends ProphecyTestCase
     {
         $this->getResponseEvent->getRequestType()
             ->willReturn(HttpKernelInterface::MASTER_REQUEST);
+        $this->getResponseEvent->getRequest()
+            ->willReturn($this->request);
 
         $this->container->getParameter('jns_xhprof.request_query_argument')
             ->willReturn('__xhprof');
@@ -197,7 +199,7 @@ class RequestListenerTest extends ProphecyTestCase
                 '/ignored/',
             ));
 
-        $this->collector->startProfiling()
+        $this->collector->startProfiling($this->request->reveal())
             ->shouldBeCalled();
 
         $this->requestListener->onCoreRequest($this->getResponseEvent->reveal());

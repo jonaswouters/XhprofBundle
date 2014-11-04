@@ -23,6 +23,7 @@ class XhprofCollector extends DataCollector
     protected $runId;
     protected $doctrine;
     protected $collecting = false;
+    protected $collectingRequest;
 
     public function __construct(ContainerInterface $container, $logger = null, DoctrineRegistry $doctrine = null)
     {
@@ -46,7 +47,7 @@ class XhprofCollector extends DataCollector
      */
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
-        if (!$this->runId) {
+        if (!$this->runId && $request === $this->collectingRequest) {
             $this->stopProfiling($request->getHost(), $request->getUri());
         }
     }
@@ -56,13 +57,14 @@ class XhprofCollector extends DataCollector
      *
      * @return boolean whether profiling was started or not.
      */
-    public function startProfiling()
+    public function startProfiling(Request $request = null)
     {
         if (mt_rand(1, $this->container->getParameter('jns_xhprof.sample_size')) != 1) {
             return false;
         }
 
         $this->collecting = true;
+        $this->collectingRequest = $request;
         xhprof_enable($this->getFlags());
 
         if ($this->logger) {
