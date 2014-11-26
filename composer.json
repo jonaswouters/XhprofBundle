@@ -1,5 +1,5 @@
 {
-    "name": "pbwebmedia/xhprof-bundle",
+    "name": "jns/xhprof-bundle",
     "type": "symfony-bundle",
     "description": "Symfony JnsXhprofBundle",
     "keywords": ["xhprof"],
