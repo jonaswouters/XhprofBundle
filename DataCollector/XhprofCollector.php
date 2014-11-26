@@ -60,13 +60,29 @@ class XhprofCollector extends DataCollector
         }
 
         $this->collecting = true;
-        xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
+
+        xhprof_enable($this->getFlags());
 
         if ($this->logger) {
             $this->logger->debug('Enabled XHProf');
         }
 
         return true;
+    }
+
+    /**
+     * Calculate the flags for xhprof_enable
+     *
+     * @return int
+     */
+    private function getFlags()
+    {
+        $flags = XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY;
+        if ($this->container->getParameter('jns_xhprof.skip_builtin_functions') === true) {
+            $flags |= XHPROF_FLAGS_NO_BUILTINS;
+        }
+
+        return $flags;
     }
 
     /**
