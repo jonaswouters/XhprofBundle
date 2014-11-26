@@ -141,7 +141,7 @@ to 1, so that every request will be profiled.
     jns_xhprof:
         sample_size: 2
 
-### Disable builtin functions
+### Disable built-in functions
 
 You can skip all built-in (internal) functions.
 
