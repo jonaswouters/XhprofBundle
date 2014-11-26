@@ -141,6 +141,13 @@ to 1, so that every request will be profiled.
     jns_xhprof:
         sample_size: 2
 
+### Disable built-in functions
+
+You can skip all built-in (internal) functions.
+
+    jns_xhprof:
+        skip_builtin_functions: true
+
 ### Web request profiling
 
 #### Enabling XHProf only for requests with a trigger parameter
