@@ -60,7 +60,6 @@ class XhprofCollector extends DataCollector
         }
 
         $this->collecting = true;
-
         xhprof_enable($this->getFlags());
 
         if ($this->logger) {
