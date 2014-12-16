@@ -34,6 +34,9 @@ class XhprofCollector extends DataCollector
 
         $this->logger    = $logger;
         $this->doctrine  = $doctrine;
+        $this->data['xhprof'] = null;
+        $this->data['source'] = null;
+        $this->data['xhprof_url'] = null;
     }
 
     /**
