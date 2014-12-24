@@ -45,8 +45,8 @@ If you are on a mac you can easily install it via [Macports][2]
 (so that it lives at `src/Jns/Bundle/XhprofBundle`). You can do this by adding
 the bundle as a submodule, cloning it, or simply downloading the source.
 
-    ```shell
-    git submodule add https://github.com/jonaswouters/XhprofBundle.git src/Jns/Bundle/XhprofBundle
+    ```bash
+    $ git submodule add https://github.com/jonaswouters/XhprofBundle.git src/Jns/Bundle/XhprofBundle
     ```
 
   2. #### Add the Jns namespace to your autoloader
@@ -67,15 +67,17 @@ need to add the `Jns` namespace to your autoloader. This file is usually located
 To initialize the bundle, you'll need to add it in your kernel. This
 file is usually located at `app/AppKernel.php`. Loading it only in your dev environment is recommended.
 
-    public function registerBundles()
-    {
-        // ...
+```php
+public function registerBundles()
+{
+    // ...
 
-        if (in_array($this->getEnvironment(), array('dev', 'test'))) {
-            // ...
-            $bundles[] = new Jns\Bundle\XhprofBundle\JnsXhprofBundle();
-        }
-    )
+    if (in_array($this->getEnvironment(), array('dev', 'test'))) {
+        // ...
+        $bundles[] = new Jns\Bundle\XhprofBundle\JnsXhprofBundle();
+    }
+}
+```
 
 ## Configuration
 
@@ -86,9 +88,11 @@ with the xhprof web located at http://xhprof.localhost.
 To change these settings for your environment you can override the defaults by
 defining the following settings in your config. The config is usually located at `app/config/config_dev.yml`.
 
-    jns_xhprof:
-        location_web:    http://xhprof.localhost
-        enabled:         true
+```yaml
+jns_xhprof:
+    location_web:    http://xhprof.localhost
+    enabled:         true
+```
 
 Do not forget to set `enabled` to `true`, or the profiler will never be activated.
 
@@ -96,34 +100,38 @@ Do not forget to set `enabled` to `true`, or the profiler will never be activate
 
 [XHGui][3] is a GUI for the XHProf PHP extension, using a database backend, and pretty graphs to make it easy to use and interpret. The XHProf bundle supports using XHGui to display the results. To use, install XHGui, and add the following two settings to the configuration, usually located at `app/config/config.yml`:
 
-    jns_xhprof:
-        entity_manager:  <name_of_entity_manager> (defaults to default)
-        entity_class:    Acme\FooBundle\Entity\XhprofDetail
-        enable_xhgui:    true
+```yaml
+jns_xhprof:
+    entity_manager:  <name_of_entity_manager> (defaults to default)
+    entity_class:    Acme\FooBundle\Entity\XhprofDetail
+    enable_xhgui:    true
+```
 
 Create your class `Acme\FooBundle\Entity\XhprofDetail`:
 
-    <?php
+```php
+<?php
 
-    namespace Acme\FooBundle\Entity;
+namespace Acme\FooBundle\Entity;
 
-    use Jns\Bundle\XhprofBundle\Entity\XhprofDetail as BaseXhprofDetail;
-    use Doctrine\ORM\Mapping as ORM;
+use Jns\Bundle\XhprofBundle\Entity\XhprofDetail as BaseXhprofDetail;
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="details")
+ */
+class XhprofDetail extends BaseXhprofDetail
+{
     /**
-     * @ORM\Entity
-     * @ORM\Table(name="details")
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="string", unique=true, length=17, nullable=false)
+     * @ORM\Id
      */
-    class XhprofDetail extends BaseXhprofDetail
-    {
-        /**
-         * @var integer $id
-         *
-         * @ORM\Column(name="id", type="string", unique=true, length=17, nullable=false)
-         * @ORM\Id
-         */
-        protected $id;
-    }
+    protected $id;
+}
+```
 
 If you only have one entity manager defined, you don't need to set it here. This setting is for the case where you are using a seperate profiling database for XHGui (highly recommended).
 
@@ -138,15 +146,19 @@ set the sample size to 2, then on average, every second request will be profiled
 Of course, in production you want to set it to a much higher value. Defaults
 to 1, so that every request will be profiled.
 
-    jns_xhprof:
-        sample_size: 2
+```yaml
+jns_xhprof:
+    sample_size: 2
+```
 
 ### Disable built-in functions
 
 You can skip all built-in (internal) functions.
 
-    jns_xhprof:
-        skip_builtin_functions: true
+```yaml
+jns_xhprof:
+    skip_builtin_functions: true
+```
 
 ### Web request profiling
 
@@ -156,15 +168,19 @@ You can specify a `request_query_argument` parameter to have XHProf only activat
 on requests that have this argument. This can be useful to profile a production
 system without impacting other requests too much.
 
-    jns_xhprof:
-        request_query_argument: "__xhprof"
+```yaml
+jns_xhprof:
+    request_query_argument: "__xhprof"
+```
 
 #### Enabling XHProf only for matching pattern request
 
 It's possible to configure `exclude_patterns` parameter in configuration. XHProf would be enabled only for requests which will match these patterns.
 
-    jns_xhprof:
-        exclude_patterns: ['/css/', '/js/']
+```yaml
+jns_xhprof:
+    exclude_patterns: ['/css/', '/js/']
+```
 
 #### Using XHProf with disabled Symfony Profiler
 
@@ -183,8 +199,10 @@ You can set the profiling of console commands to `on`, `off` or `option`.
 * `off`: no commands are profiled (but web requests might be profiled);
 * `option`: commands get an additional option to trigger profiling.
 
-    jns_xhprof:
-        command: "off"
+```yaml
+jns_xhprof:
+    command: "off"
+```
 
 #### Enabling XHProf with a specific option only
 
@@ -192,23 +210,28 @@ When you set `command` to `option`, you can specify an option name that will
 trigger a profiler run on a command. That option will automatically be available
 on all commands.
 
-    jns_xhprof:
-        command: "option"
-        command_option_name: xhprof
+```yaml
+jns_xhprof:
+    command: "option"
+    command_option_name: xhprof
+```
 
 Now you can profile a command with
 
-    app/console acme:my:command --xhprof
+```bash
+$ app/console acme:my:command --xhprof
+```
 
 #### Excluding some commands from profiling
 
 When using the `on` setting, you might want to filter what commands get profiled.
 If the name filter matches, the profiler will never trigger.
 
-    jns_xhprof:
-        command_exclude_patterns: ['acme:', ':debug']
+```yaml
+jns_xhprof:
+    command_exclude_patterns: ['acme:', ':debug']
+```
 
-
-[1]: http://mirror.facebook.net/facebook/xhprof/doc.html
+[1]: http://php.net/manual/book.xhprof.php
 [2]: http://www.macports.org/
 [3]: https://github.com/preinheimer/xhprof
