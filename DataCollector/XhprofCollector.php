@@ -98,7 +98,7 @@ class XhprofCollector extends DataCollector
     public function stopProfiling($serverName, $uri)
     {
         if (!$this->collecting) {
-            return false;
+            return $this->data['xhprof'] ? $this->data['xhprof'] : false;
         }
 
         $this->collecting = false;
