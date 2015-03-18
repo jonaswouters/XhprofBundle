@@ -2,6 +2,7 @@
 
 namespace Jns\Bundle\XhprofBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -30,11 +31,15 @@ class JnsXhprofExtension extends Extension
         $configuration = new Configuration();
         $config = $processor->process($configuration->getConfigTree(), $configs);
 
-        if ($config['enabled'] && function_exists('xhprof_enable')) {
-            $this->loadDefaults($container);
+        if ($config['enabled']) {
+            if (function_exists('xhprof_enable')) {
+                $this->loadDefaults($container);
 
-            foreach ($config as $key => $value) {
-                $container->setParameter($this->getAlias().'.'.$key, $value);
+                foreach ($config as $key => $value) {
+                    $container->setParameter($this->getAlias().'.'.$key, $value);
+                }
+            } else {
+                throw new InvalidConfigurationException("Xhprof Bundle is enabled but the xhprof extension is not enabled.");
             }
         }
     }
