@@ -64,6 +64,15 @@ class RequestListener
         }
 
         $this->collector->startProfiling();
+
+        $collector = $this->collector;
+
+        register_shutdown_function(function () use ($collector, $event) {
+            if ($collector->isCollecting()) {
+                $request = $event->getRequest();
+                $collector->stopProfiling($request->getHost(), $request->getUri());
+            }
+        });
     }
 
     /**
