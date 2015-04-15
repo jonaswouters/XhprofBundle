@@ -250,4 +250,13 @@ class XhprofCollector extends DataCollector
     {
         return $this->data['xhprof']  ? true : false;
     }
+
+    /**
+     * Check is the collector is currently running
+     * @return bool
+     */
+    public function isCollecting()
+    {
+        return $this->collecting === true;
+    }
 }
