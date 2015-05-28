@@ -32,7 +32,7 @@ class JnsXhprofExtension extends Extension
         $config = $processor->process($configuration->getConfigTree(), $configs);
 
         if ($config['enabled']) {
-            if (function_exists('xhprof_enable')) {
+            if (!$config['require_extension_exists'] || function_exists('xhprof_enable')) {
                 $this->loadDefaults($container);
 
                 foreach ($config as $key => $value) {
