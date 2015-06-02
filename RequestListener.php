@@ -63,7 +63,7 @@ class RequestListener
             }
         }
 
-        $this->collector->startProfiling();
+        $this->collector->startProfiling($request);
     }
 
     /**
