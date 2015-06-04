@@ -35,6 +35,7 @@ class XhprofCollector extends DataCollector
 
         $this->logger    = $logger;
         $this->doctrine  = $doctrine;
+        $this->data['xhprof_extension_exists'] = function_exists('xhprof_enable');
         $this->data['xhprof'] = null;
         $this->data['source'] = null;
         $this->data['xhprof_url'] = null;
@@ -59,7 +60,7 @@ class XhprofCollector extends DataCollector
      */
     public function startProfiling(Request $request = null)
     {
-        if (mt_rand(1, $this->container->getParameter('jns_xhprof.sample_size')) != 1) {
+        if (!function_exists('xhprof_enable') || mt_rand(1, $this->container->getParameter('jns_xhprof.sample_size')) != 1) {
             return false;
         }
 
@@ -225,6 +226,16 @@ class XhprofCollector extends DataCollector
     public function getName()
     {
         return 'xhprof';
+    }
+
+    /**
+     * Gets the XHProf extension exists or not.
+     *
+     * @return boolean Extension exists or not
+     */
+    public function getXhprofExtensionExists()
+    {
+        return $this->data['xhprof_extension_exists'];
     }
 
     /**

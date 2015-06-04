@@ -11,6 +11,10 @@
             {% spaceless %}
                 <span>Not profiling</span>
             {% endspaceless %}
+            {% if not collector.xhprofextensionexists %}
+                <br />
+                <span style="color:red;">Xhprof extension not exists</span>
+            {% endif %}
         {% endset %}
     {% endif %}
     {% set icon %}

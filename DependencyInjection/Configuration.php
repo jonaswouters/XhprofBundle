@@ -40,6 +40,7 @@ class Configuration
                 ->arrayNode('exclude_patterns')->prototype('scalar')->end()->end()
                 ->scalarNode('sample_size')->defaultValue(1)->end()
                 ->scalarNode('enabled')->defaultFalse()->end()
+                ->scalarNode('require_extension_exists')->defaultTrue()->end()
                 ->scalarNode('skip_builtin_functions')->defaultFalse()->end()
                 ->scalarNode('request_query_argument')->defaultFalse()->end()
                 ->scalarNode('response_header')->defaultValue('X-Xhprof-Url')->end()
