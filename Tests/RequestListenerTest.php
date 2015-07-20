@@ -200,6 +200,9 @@ class RequestListenerTest extends ProphecyTestCase
         $this->collector->startProfiling()
             ->shouldBeCalled();
 
+        $this->collector->isCollecting()
+            ->shouldBeCalled();
+
         $this->requestListener->onCoreRequest($this->getResponseEvent->reveal());
     }
 
