@@ -23,7 +23,8 @@
     },
     "suggest": {
         "ext-xhprof": "Hierarchical Profiler for PHP",
-        "doctrine/orm": "Persist details in a storage via doctrine"
+        "doctrine/orm": "Persist details in a storage via doctrine",
+        "perftools/xhgui": "A graphical interface for XHProf data built on MongoDB"
     },
     "autoload": {
         "psr-0": {

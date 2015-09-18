@@ -8,8 +8,11 @@ use Psr\Log\LoggerInterface as PsrLoggerInterface;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Doctrine\Bundle\DoctrineBundle\Registry as DoctrineRegistry;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Jns\Bundle\XhprofBundle\Document\XhguiRuns as XhguiRuns_Document;
+use Jns\Bundle\XhprofBundle\Entity\XhguiRuns as XhguiRuns_Entity;
 
 /**
  * XhprofDataCollector.
@@ -25,7 +28,7 @@ class XhprofCollector extends DataCollector
     protected $collecting = false;
     protected $collectingRequest;
 
-    public function __construct(ContainerInterface $container, $logger = null, DoctrineRegistry $doctrine = null)
+    public function __construct(ContainerInterface $container, $logger = null, ManagerRegistry $doctrine = null)
     {
         $this->container = $container;
 
@@ -119,23 +122,30 @@ class XhprofCollector extends DataCollector
         }
 
         $xhprof_runs = new \XHProfRuns_Default();
-
         $source = null;
 
         if ($enableXhgui) {
-            $this->runId = $this->saveProfilingDataToDB($xhprof_data, $uri, $serverName);
+            $xhprof_runs = new XhguiRuns_Entity($serverName, $uri);
+            $xhprof_runs->setContainer($this->container);
+        } else if ($this->container->getParameter('jns_xhprof.enable_xhgui_new')) {
+            $xhprof_runs = new XhguiRuns_Document();
+            $xhprof_runs->setContainer($this->container);
         } else {
             $source = $this->sanitizeUriForSource($uri);
-
-            $this->runId = $xhprof_runs->save_run($xhprof_data, $source);
         }
 
+        $this->runId = $xhprof_runs->save_run($xhprof_data, $source);
 
         $this->data = array(
             'xhprof' => $this->runId,
             'source' => $source,
-            'xhprof_url' => $this->container->getParameter('jns_xhprof.location_web'),
         );
+
+        if ($this->container->getParameter('jns_xhprof.enable_xhgui_new')) {
+            $this->data['xhprof_url'] = $this->container->getParameter('jns_xhprof.location_web') . '/run/view?id=' . $this->data['xhprof'];
+        } else {
+            $this->data['xhprof_url'] = $this->container->getParameter('jns_xhprof.location_web') . '?run=' . $this->data['xhprof'] . '&source='.$this->data['source'];
+        }
 
         return $this->data['xhprof'];
     }
@@ -151,54 +161,6 @@ class XhprofCollector extends DataCollector
         $uri = preg_replace('/[\/]+/', '~', $uri);
 
         return preg_replace('/[^\w~\-_]+/', '-', $uri);
-    }
-
-    /**
-     * This function saves the profiling data as well as some additional data to a profiling database.
-     *
-     * @param  array $xhprof_data
-     * @param string $uri
-     * @param string $serverName
-     * @throws \Exception if doctrine was not injected correctly
-     * @return string   Returns the run id for the saved XHProf run
-     */
-    private function saveProfilingDataToDB($xhprof_data, $uri, $serverName)
-    {
-        $pmu = isset($xhprof_data['main()']['pmu']) ? $xhprof_data['main()']['pmu'] : '';
-        $wt  = isset($xhprof_data['main()']['wt'])  ? $xhprof_data['main()']['wt']  : '';
-        $cpu = isset($xhprof_data['main()']['cpu']) ? $xhprof_data['main()']['cpu'] : '';
-
-        if (empty($this->doctrine)) {
-            throw new \Exception("Trying to save to database, but Doctrine was not set correctly");
-        }
-
-        $runId = uniqid();
-
-        $em = $this->doctrine->getManager($this->container->getParameter('jns_xhprof.entity_manager'));
-        $entityClass  = $this->container->getParameter('jns_xhprof.entity_class');
-
-        $xhprofDetail = new $entityClass();
-        $xhprofDetail
-            ->setId($runId)
-            ->setUrl($uri)
-            ->setCanonicalUrl($this->getCanonicalUrl($uri))
-            ->setServerName($serverName)
-            ->setPerfData(gzcompress(serialize(($xhprof_data))))
-            ->setCookie(serialize($_COOKIE))
-            ->setPost(serialize($_POST))
-            ->setGet(serialize($_GET))
-            ->setPmu($pmu)
-            ->setWt($wt)
-            ->setCpu($cpu)
-            ->setServerId(getenv('SERVER_NAME'))
-            ->setAggregateCallsInclude('')
-            ->setTimestamp(new \DateTime())
-            ;
-
-        $em->persist($xhprofDetail);
-        $em->flush();
-
-        return $runId;
     }
 
     /**
@@ -255,7 +217,7 @@ class XhprofCollector extends DataCollector
      */
     public function getXhprofUrl()
     {
-        return $this->data['xhprof_url'] . '?run=' . $this->data['xhprof'] . '&source='.$this->data['source'];
+        return $this->data['xhprof_url'];
     }
 
     /**
