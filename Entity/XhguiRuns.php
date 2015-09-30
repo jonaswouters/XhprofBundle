@@ -63,4 +63,5 @@ class XhguiRuns implements iXHProfRuns, ContainerAwareInterface
 
         return $runId;
     }
+}
 ?>

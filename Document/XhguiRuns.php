@@ -3,12 +3,18 @@
 namespace Jns\Bundle\XhprofBundle\Document;
 
 use iXHProfRuns;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
-class XhguiRuns implements iXHProfRuns, ContainerAwareInterface
+class XhguiRuns implements iXHProfRuns
 {
-    use ContainerAwareTrait;
+    /**
+     * @var DocumentManager
+     */
+    private $documentManager;
+
+    public function __construct(DocumentManager $documentManager) {
+        $this->documentManager = $documentManager;
+    }
 
     /**
      * {@inheritDoc}
@@ -25,10 +31,8 @@ class XhguiRuns implements iXHProfRuns, ContainerAwareInterface
             throw new \Exception('composer require perftools/xhgui dev-master');
         }
         $data = $this->prepareForSave($xhprof_data);
-        $managerRegistry = $this->container->get($this->container->getParameter('jns_xhprof.manager_registry'));
-        $documentManager = $managerRegistry->getManager($this->container->getParameter('jns_xhprof.entity_manager'));
-        $dbname = $documentManager->getConfiguration()->getDefaultDB();
-        $mongo = $documentManager->getConnection()->getMongoClient()->selectDB($dbname);
+        $dbname = $this->documentManager->getConfiguration()->getDefaultDB();
+        $mongo = $this->documentManager->getConnection()->getMongoClient()->selectDB($dbname);
         $profiles = new \Xhgui_Profiles($mongo);
         $saver = new \Xhgui_Saver_Mongo($profiles);
         try {

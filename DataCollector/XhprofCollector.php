@@ -10,9 +10,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Jns\Bundle\XhprofBundle\Document\XhguiRuns as XhguiRuns_Document;
 use Jns\Bundle\XhprofBundle\Entity\XhguiRuns as XhguiRuns_Entity;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 /**
  * XhprofDataCollector.
@@ -113,24 +114,16 @@ class XhprofCollector extends DataCollector
 
         $this->collecting = false;
 
-        $enableXhgui = $this->container->getParameter('jns_xhprof.enable_xhgui');
-
         $xhprof_data = xhprof_disable();
 
         if ($this->logger) {
             $this->logger->debug('Disabled XHProf');
         }
 
-        $xhprof_runs = new \XHProfRuns_Default();
+        $xhprof_runs = $this->createRun($serverName, $uri);
         $source = null;
 
-        if ($enableXhgui) {
-            $xhprof_runs = new XhguiRuns_Entity($serverName, $uri);
-            $xhprof_runs->setContainer($this->container);
-        } else if ($this->container->getParameter('jns_xhprof.enable_xhgui_new')) {
-            $xhprof_runs = new XhguiRuns_Document();
-            $xhprof_runs->setContainer($this->container);
-        } else {
+        if ($xhprof_runs instanceof \XHProfRuns_Default) {
             $source = $this->sanitizeUriForSource($uri);
         }
 
@@ -141,13 +134,33 @@ class XhprofCollector extends DataCollector
             'source' => $source,
         );
 
-        if ($this->container->getParameter('jns_xhprof.enable_xhgui_new')) {
+        if ($xhprof_runs instanceof XhguiRuns_Document) {
             $this->data['xhprof_url'] = $this->container->getParameter('jns_xhprof.location_web') . '/run/view?id=' . $this->data['xhprof'];
         } else {
             $this->data['xhprof_url'] = $this->container->getParameter('jns_xhprof.location_web') . '?run=' . $this->data['xhprof'] . '&source='.$this->data['source'];
         }
 
         return $this->data['xhprof'];
+    }
+
+    /**
+     * @return \iXHProfRuns
+     */
+    protected function createRun($serverName, $uri) {
+        $enableXhgui = $this->container->getParameter('jns_xhprof.enable_xhgui');
+        if ($enableXhgui) {
+            $managerRegistry = $this->container->get($this->container->getParameter('jns_xhprof.manager_registry'));
+            $objectManager = $managerRegistry->getManager($this->container->getParameter('jns_xhprof.entity_manager'));
+            if ($objectManager instanceof DocumentManager) {
+                $xhprof_runs = new XhguiRuns_Document($objectManager);
+            } else {
+                $xhprof_runs = new XhguiRuns_Entity($serverName, $uri);
+                $xhprof_runs->setContainer($this->container);
+            }
+        } else {
+            $xhprof_runs = new \XHProfRuns_Default();
+        }
+        return $xhprof_runs;
     }
 
     /**
