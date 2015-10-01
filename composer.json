@@ -18,12 +18,14 @@
         "lox/xhprof": "dev-master@dev"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.1.3",
-        "phpspec/prophecy": "~1.1.2"
+        "doctrine/common": "^2.5",
+        "phpspec/prophecy": "~1.1.2",
+        "phpunit/phpunit": "~4.1.3"
     },
     "suggest": {
         "ext-xhprof": "Hierarchical Profiler for PHP",
-        "doctrine/orm": "Persist details in a storage via doctrine"
+        "doctrine/orm": "Persist details in a storage via doctrine",
+        "perftools/xhgui": "A graphical interface for XHProf data built on MongoDB"
     },
     "autoload": {
         "psr-4": {
