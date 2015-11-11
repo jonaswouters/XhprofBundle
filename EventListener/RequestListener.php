@@ -1,7 +1,8 @@
 <?php
 
-namespace Jns\Bundle\XhprofBundle;
+namespace Jns\Bundle\XhprofBundle\EventListener;
 
+use Jns\Bundle\XhprofBundle\DataCollector\XhprofCollector;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -20,7 +21,7 @@ class RequestListener
     protected $collector;
     private $container;
 
-    public function __construct(DataCollector\XhprofCollector $collector, ContainerInterface $container)
+    public function __construct(XhprofCollector $collector, ContainerInterface $container)
     {
         $this->collector = $collector;
         $this->container = $container;
