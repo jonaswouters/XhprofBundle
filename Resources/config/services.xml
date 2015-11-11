@@ -5,14 +5,14 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="xhprof_listener" class="Jns\Bundle\XhprofBundle\RequestListener">
+        <service id="xhprof_listener" class="Jns\Bundle\XhprofBundle\EventListener\RequestListener">
             <tag name="kernel.event_listener" event="kernel.response" method="onCoreResponse" priority="-10000" />
             <tag name="kernel.event_listener" event="kernel.request" method="onCoreRequest" priority="10000" />
             <argument type="service" id="data_collector.xhprof" />
             <argument type="service" id="service_container" />
         </service>
 
-        <service id="jns_xhprof.console.listener" class="Jns\Bundle\XhprofBundle\CommandListener">
+        <service id="jns_xhprof.console.listener" class="Jns\Bundle\XhprofBundle\EventListener\CommandListener">
             <tag name="kernel.event_listener" event="console.command" method="onCommand" priority="-10000" />
             <tag name="kernel.event_listener" event="console.terminate" method="onTerminate" priority="10000" />
             <argument type="service" id="data_collector.xhprof" />

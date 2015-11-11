@@ -1,6 +1,6 @@
 <?php
 
-namespace Jns\Bundle\XhprofBundle;
+namespace Jns\Bundle\XhprofBundle\EventListener;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
