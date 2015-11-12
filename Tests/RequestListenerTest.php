@@ -2,7 +2,7 @@
 
 namespace Jns\Bundle\XhprofBundle\Tests;
 
-use Jns\Bundle\XhprofBundle\RequestListener;
+use Jns\Bundle\XhprofBundle\EventListener\RequestListener;
 use Jns\Bundle\XhprofBundle\DataCollector\XhprofCollector;
 use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
