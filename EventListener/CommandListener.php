@@ -1,6 +1,6 @@
 <?php
 
-namespace Jns\Bundle\XhprofBundle;
+namespace Jns\Bundle\XhprofBundle\EventListener;
 
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;

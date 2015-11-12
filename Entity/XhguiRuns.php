@@ -57,7 +57,7 @@ class XhguiRuns implements iXHProfRuns, ContainerAwareInterface
         $xhprofDetail
             ->setId($runId)
             ->setUrl($this->uri)
-            ->setCanonicalUrl($this->getCanonicalUrl($uri))
+            ->setCanonicalUrl($this->getCanonicalUrl($this->uri))
             ->setServerName($this->serverName)
             ->setPerfData(gzcompress(serialize(($xhprof_data))))
             ->setCookie(serialize($_COOKIE))
@@ -75,6 +75,25 @@ class XhguiRuns implements iXHProfRuns, ContainerAwareInterface
         $em->flush();
 
         return $runId;
+    }
+
+    /**
+     * Return the canonical URL for the passed in one.
+     *
+     * @param  String $url
+     * @return String
+     */
+    protected function getCanonicalUrl($url)
+    {
+        if ($url[0] == '#') {
+            $url = substr($url, 1, -1);
+
+            if (substr($url, -1) == '$') {
+                $url = substr($url, 0, -1);
+            }
+        }
+
+        return $url;
     }
 }
 ?>
