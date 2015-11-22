@@ -29,7 +29,7 @@ class JnsXhprofExtension extends Extension
     {
         $processor = new Processor();
         $configuration = new Configuration();
-        $config = $processor->process($configuration->getConfigTree(), $configs);
+        $config = $processor->process($configuration->getConfigTreeBuilder()->buildTree(), $configs);
 
         if ($config['enabled']) {
             if (!$config['require_extension_exists'] || function_exists('xhprof_enable')) {
@@ -53,6 +53,8 @@ class JnsXhprofExtension extends Extension
      * Get File Loader
      *
      * @param ContainerBuilder $container
+     *
+     * @return XmlFileLoader
      */
     public function getFileLoader($container)
     {
