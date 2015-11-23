@@ -177,25 +177,6 @@ class XhprofCollector extends DataCollector
     }
 
     /**
-     * Return the canonical URL for the passed in one.
-     *
-     * @param  String $url
-     * @return String
-     */
-    protected function getCanonicalUrl($url)
-    {
-        if ($url[0] == '#') {
-            $url = substr($url, 1, -1);
-
-            if (substr($url, -1) == '$') {
-                $url = substr($url, 0, -1);
-            }
-        }
-
-        return $url;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getName()
