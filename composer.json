@@ -12,15 +12,16 @@
         }
     ],
     "require": {
-        "php": ">=5.3.2",
-        "symfony/http-kernel": "2.*",
-        "symfony/dependency-injection": "2.*",
-        "lox/xhprof": "dev-master@dev"
+        "php": "^5.3.2|^7.0",
+        "symfony/http-kernel": "^2.3|^3.0",
+        "symfony/dependency-injection": "^2.3|^3.0",
+        "pbweb/xhprof": "^1.0"
     },
     "require-dev": {
         "doctrine/common": "^2.5",
-        "phpspec/prophecy": "~1.1.2",
-        "phpunit/phpunit": "~4.1.3"
+        "symfony/console":"^2.8|^3.0",
+        "phpspec/prophecy": "^1.1.2",
+        "phpunit/phpunit": "^4.1.3"
     },
     "suggest": {
         "ext-xhprof": "Hierarchical Profiler for PHP",
@@ -34,10 +35,10 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "dev-master": "1.x-dev"
         }
-     },
-     "config": {
+    },
+    "config": {
         "bin-dir": "bin/"
-     }
+    }
 }
