@@ -4,7 +4,6 @@ namespace Jns\Bundle\XhprofBundle\EventListener;
 
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
-use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Jns\Bundle\XhprofBundle\DataCollector\XhprofCollector;
@@ -78,19 +77,14 @@ class CommandListener
      */
     private function isProfileOption(ConsoleCommandEvent $event)
     {
-        $inputDefinition = $event->getCommand()->getApplication()->getDefinition();
+        $definition = $event->getCommand()->getDefinition();
 
-        $inputDefinition->addOption(
+        $definition->addOption(
             new InputOption($this->optionName, null, InputOption::VALUE_NONE, '<info>JnsXhprofBundle</info>: Whether to profile this command with xhprof', null)
         );
 
-        // merge the application's input definition
-        $event->getCommand()->mergeApplicationDefinition();
-
-        $input = new ArgvInput();
-
-        // we use the input definition of the command
-        $input->bind($event->getCommand()->getDefinition());
+        $input = $event->getInput();
+        $input->bind($definition);
 
         return $input->getOption($this->optionName);
     }
