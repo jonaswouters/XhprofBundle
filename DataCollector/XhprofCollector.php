@@ -39,7 +39,7 @@ class XhprofCollector extends DataCollector
 
         $this->logger    = $logger;
         $this->doctrine  = $doctrine;
-        $this->data['xhprof_extension_exists'] = function_exists('xhprof_enable');
+        $this->data['xhprof_extension_exists'] = function_exists('xhprof_enable') || function_exists('tideways_enable');
         $this->data['xhprof'] = null;
         $this->data['source'] = null;
         $this->data['xhprof_url'] = null;
@@ -64,13 +64,22 @@ class XhprofCollector extends DataCollector
      */
     public function startProfiling(Request $request = null)
     {
-        if (!function_exists('xhprof_enable') || mt_rand(1, $this->container->getParameter('jns_xhprof.sample_size')) != 1) {
+        if (!$this->getXhprofExtensionExists() || mt_rand(1, $this->container->getParameter('jns_xhprof.sample_size')) != 1) {
             return false;
         }
 
         $this->collecting = true;
         $this->collectingRequest = $request;
-        xhprof_enable($this->getFlags());
+
+        switch (true) {
+            case function_exists('xhprof_enable'):
+                xhprof_enable($this->getFlags());
+                break;
+
+            case function_exists('tideways_enable'):
+                tideways_enable($this->getFlags());
+                break;
+        }
 
         if ($this->logger) {
             $this->logger->debug('Enabled XHProf');
@@ -86,9 +95,20 @@ class XhprofCollector extends DataCollector
      */
     private function getFlags()
     {
-        $flags = XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY;
-        if ($this->container->getParameter('jns_xhprof.skip_builtin_functions') === true) {
-            $flags |= XHPROF_FLAGS_NO_BUILTINS;
+        switch (true) {
+            case function_exists('xhprof_enable'):
+                $flags = XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY;
+                if ($this->container->getParameter('jns_xhprof.skip_builtin_functions') === true) {
+                    $flags |= XHPROF_FLAGS_NO_BUILTINS;
+                }
+                break;
+
+            case function_exists('tideways_enable'):
+                $flags = TIDEWAYS_FLAGS_CPU | TIDEWAYS_FLAGS_MEMORY;
+                if ($this->container->getParameter('jns_xhprof.skip_builtin_functions') === true) {
+                    $flags |= TIDEWAYS_FLAGS_NO_BUILTINS;
+                }
+                break;
         }
 
         return $flags;
@@ -114,7 +134,15 @@ class XhprofCollector extends DataCollector
 
         $this->collecting = false;
 
-        $xhprof_data = xhprof_disable();
+        switch (true) {
+            case function_exists('xhprof_disable'):
+                $xhprof_data = xhprof_disable();
+                break;
+
+            case function_exists('tideways_disable'):
+                $xhprof_data = tideways_disable();
+                break;
+        }
 
         if ($this->logger) {
             $this->logger->debug('Disabled XHProf');

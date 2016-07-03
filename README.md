@@ -25,6 +25,8 @@ Make sure you have XHProf installed.
 If you are on a mac you can easily install it via [Macports][2]
     sudo port install php5-xhprof
 
+If you are using PHP 7 you can use the [Tideways XHProf fork](https://tideways.io/profiler/xhprof-for-php7-php5.6).
+
 1. ### Composer
 
   Add the following dependencies to your projects composer.json file:
@@ -36,7 +38,8 @@ If you are on a mac you can easily install it via [Macports][2]
     }
     ```
 
-  Of course, you have to install [xhprof library](http://php.net/manual/fr/book.xhprof.php) in your server.
+  Of course, you have to install [xhprof library](http://php.net/manual/fr/book.xhprof.php) (or for PHP 7 the
+  the [Tideways XHProf fork](https://tideways.io/profiler/xhprof-for-php7-php5.6)) in your server.
   At this moment, `ext-xhprof` is not required because your application could be deployed to a server without xhprof.
 
 2. ### Old way by adding to your vendor/bundles/ dir
